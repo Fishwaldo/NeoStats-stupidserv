@@ -1,4 +1,8 @@
 StupidServ Module for NeoStats Changelog.
 ==============================================================================
+1.1 - Fish
+- Fix a compile problem with getopts
+- Fix a problem with make re-doing flex files
+
 1.0 - Fish 
 - Initial Release

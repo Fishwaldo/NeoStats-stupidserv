@@ -20,7 +20,7 @@
 **  USA
 **
 ** NeoStats CVS Identification
-** $Id: ss.c,v 1.1 2003/02/18 13:52:07 fishwaldo Exp $
+** $Id: ss.c,v 1.2 2003/02/18 23:39:19 fishwaldo Exp $
 */
 
 #include <stdio.h>
@@ -47,7 +47,7 @@ static void s_version(User *u);
 Module_Info my_info[] = { {
     "StupidServ",
     "A Language Translator",
-    "1.0"
+    "1.1"
 } };
 
 
