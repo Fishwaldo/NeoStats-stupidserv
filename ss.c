@@ -33,99 +33,44 @@
  * StupidServ name
  */
 static char s_StupidServ[MAXNICK];
+static ModUser *ss_bot;
 
 /*
  * Local declarations
  */
-static void s_send(User *u, char **cmd, int ac);
-static void s_convert(User *u, char **cmd, int ac);
-static void s_list(User *u);
-static void s_version(User *u);
+static int s_send(User *u, char **av, int ac);
+static int s_convert(User *u, char **av, int ac);
+static int s_list(User *u, char **av, int ac);
+static int s_version(User *u, char **av, int ac);
+static int s_about(User *u, char **av, int ac);
 
+static bot_cmd ss_commands[]=
+{
+	{"SEND",	s_send,		5, 	0,	s_help_send, 	s_help_send_oneline },
+	{"CONVERT", s_convert,	3, 	0,	s_help_convert,	s_help_convert_oneline },
+	{"LIST",	s_list,		0, 	0,	s_help_list, 	s_help_list_oneline },
+	{"VERSION", s_version,	0, 	0,	s_help_version,	s_help_version_oneline },
+	{"ABOUT",	s_about,	0, 	0,	s_help_about,	s_help_about_oneline },
+	{NULL,		NULL,		0, 	0,					NULL, 			NULL}
+};							
 /*
  * Module info descriptor
  */
 ModuleInfo __module_info = {
     "StupidServ",
     "A Language Translator",
-    "1.1",
+    "1.3",
 	__DATE__,
 	__TIME__
 };
-
-/*
- * Message processor for StupidServ
- */
-int __BotMessage(char *origin, char **av, int ac)
-{
-    User *u;
-    u = finduser(origin);
-	if (!u) /* User not found */
-		return 1;
-
-    if (!strcasecmp(av[1], "HELP")) {
-		if (ac <= 2) {
-			privmsg_list(u->nick, s_StupidServ, s_help);
-			privmsg_list(u->nick, s_StupidServ, s_help_on_help);
-			return 1;
-		} else if (!strcasecmp(av[2], "SEND")) {
-			privmsg_list(u->nick, s_StupidServ, s_help_send);
-			return 1;
-		} else if (!strcasecmp(av[2], "CONVERT")) {
-			privmsg_list(u->nick, s_StupidServ, s_help_convert);
-			return 1;
-		} else if (!strcasecmp(av[2], "LIST")) {
-			privmsg_list(u->nick, s_StupidServ, s_help_list);
-			return 1;
-		} else if (!strcasecmp(av[2], "ABOUT")) {
-			privmsg_list(u->nick, s_StupidServ, s_help_about);
-			return 1;
-		} else if (!strcasecmp(av[2], "VERSION")) {
-			privmsg_list(u->nick, s_StupidServ, s_help_version);
-			return 1;
-		} else {
-			prefmsg(u->nick, s_StupidServ,
-				"Unknown Help Topic: \2%s\2", av[2]);
-		}
-        return 1;
-    } else if (!strcasecmp(av[1], "SEND")) {
-         if (ac < 5) {
-             prefmsg(u->nick, s_StupidServ, "Syntax: /msg %s SEND <lang> <nick|channel> <text>", s_StupidServ);
-             prefmsg(u->nick, s_StupidServ, "For additional help: /msg %s HELP", s_StupidServ);
-             return -1;
-         }
-         s_send(u, av, ac);
-    } else if (!strcasecmp(av[1], "CONVERT")) {
-        if (ac < 3) {
-        	prefmsg(u->nick, s_StupidServ, "Syntax: /msg %s CONVERT <text>", s_StupidServ);
-            prefmsg(u->nick, s_StupidServ, "For additional help: /msg %s HELP", s_StupidServ);
-            return -1;
-        }
-    	s_convert(u, av, ac);
-    } else if (!strcasecmp(av[1], "LIST")) {
-        s_list(u);
-    } else if (!strcasecmp(av[1], "VERSION")) {
-        chanalert(s_Services,"%s Wanted to know the current version information for %s",u->nick,s_StupidServ);
-        s_version(u);
-    } else if (!strcasecmp(av[1], "ABOUT") || !strcasecmp(av[1], "CREDITS")) {
-        privmsg_list(u->nick, s_StupidServ, s_about);
-    } else {
-        chanalert(s_Services, "%s requested the unknown command of: %s", u->nick, av[1]);
-        prefmsg(u->nick, s_StupidServ, "Unknown Command: \2%s\2, perhaps you need some HELP?", av[1]);
-    }
-    return 1;
-}
 
 /*
  * Introduce the StupidServ bot onto the network
  */
 static int Online(char **av, int ac) 
 {
-    if (init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", __module_info.module_name) == -1 ) {
-        /* Nick was in use */
-        strlcat(s_StupidServ, "_", MAXNICK);
-        init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", __module_info.module_name);
-    }
+	ss_bot = init_mod_bot(s_StupidServ, "SS", me.name, "A Network Morale Service", 
+		services_bot_modes, BOT_FLAG_DEAF, ss_commands, NULL, __module_info.module_name);
     return 1;
 };
 
@@ -156,9 +101,10 @@ void __ModFini()
 /*
  * Routine for VERSION 
  */
-static void s_version(User *u)
+static int s_version(User *u, char **av, int ac)
 {
 	SET_SEGV_LOCATION();
+    chanalert(s_Services,"%s Wanted to know the current version information for %s",u->nick,s_StupidServ);
 	prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
 	prefmsg(u->nick, s_StupidServ, "%s Version: %s Compiled %s at %s", s_StupidServ, 
 		__module_info.module_version, __module_info.module_build_date, __module_info.module_build_time);
@@ -167,9 +113,18 @@ static void s_version(User *u)
 }
 
 /*
+ * Routine for VERSION 
+ */
+static int s_about(User *u, char **av, int ac)
+{
+	SET_SEGV_LOCATION();
+    privmsg_list(u->nick, s_StupidServ, s_help_about);
+}
+
+/*
  * Routine for convert
  */
-static void s_convert(User *u, char **cmd, int ac) 
+static int s_convert(User *u, char **av, int ac) 
 {
 	const gtf_filter_t *fp;
 	char *inbuf;
@@ -178,12 +133,12 @@ static void s_convert(User *u, char **cmd, int ac)
 	SET_SEGV_LOCATION();
 
 	/* now find the language they want */
-	fp = gtf_filter_lookup(cmd[2]);
+	fp = gtf_filter_lookup(av[2]);
 	if (!fp) {
 		prefmsg(u->nick, s_StupidServ, "Can not find that Language. /msg %s list for language list", s_StupidServ);
 		return;
 	}
-	inbuf = joinbuf(cmd, ac, 3);
+	inbuf = joinbuf(av, ac, 3);
 	if (fp->filter(inbuf, outbuf, 450) > 0) {
 		prefmsg(u->nick, s_StupidServ, "Translated Text was too Long. Sending shortened text only");
 	}
@@ -194,7 +149,7 @@ static void s_convert(User *u, char **cmd, int ac)
 /*
  * Routine for list
  */
-static void s_list(User *u) 
+static int s_list(User *u, char **av, int ac) 
 {
 	const gtf_filter_t *fp, *fp1;
 	int i;
@@ -210,36 +165,35 @@ static void s_list(User *u)
 /*
  * Routine for send
  */
-static void s_send(User *u, char **cmd, int ac) 
+static int s_send(User *u, char **av, int ac) 
 {
 	const gtf_filter_t *fp;
 	char *inbuf;
 	char outbuf[450];
         
 	SET_SEGV_LOCATION();
-
-	if (findchan(cmd[3])) {
+	if (findchan(av[3])) {
 		if (UserLevel(u) < NS_ULEVEL_OPER) {
 		    prefmsg(u->nick, s_StupidServ, "Only Operators can send to channels.");
 	    	}
-        } else if (!finduser(cmd[3])) {
+        } else if (!finduser(av[3])) {
             prefmsg(u->nick, s_StupidServ, "That user cannot be found on IRC. As a result, your message was not sent. Please check the spelling and try again!");
             return;
         }
         /* The user has passed the minimum requirements for input */
 
 	/* now find the language they want */
-	fp = gtf_filter_lookup(cmd[2]);
+	fp = gtf_filter_lookup(av[2]);
 	if (!fp) {
 		prefmsg(u->nick, s_StupidServ, "Can not find that Language. /msg %s list for language list", s_StupidServ);
 		return;
 	}
-	inbuf = joinbuf(cmd, ac, 4);
+	inbuf = joinbuf(av, ac, 4);
 	if (fp->filter(inbuf, outbuf, 450) > 0) {
 		prefmsg(u->nick, s_StupidServ, "Translated Text was too Long. Sending shortened text only");
 	}
-	prefmsg(cmd[3], s_StupidServ, "%s is talking %s, and sent this:", u->nick, cmd[2]);
-	prefmsg(cmd[3], s_StupidServ, "%s", outbuf);
-	prefmsg(u->nick, s_StupidServ, "Your Message was sent to %s", cmd[3]);
+	prefmsg(av[3], s_StupidServ, "%s is talking %s, and sent this:", u->nick, av[2]);
+	prefmsg(av[3], s_StupidServ, "%s", outbuf);
+	prefmsg(u->nick, s_StupidServ, "Your Message was sent to %s", av[3]);
 	free(inbuf);
 }

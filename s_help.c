@@ -23,28 +23,11 @@
 ** $Id: s_help.c,v 1.1 2003/02/18 13:53:03 fishwaldo Exp $
 */
 
-const char *s_help[] = {
-	"\2StupidServ\2 translates text to a \"Language\" and",
-	"can send it to a user or channel (if you are an operator)",
-	"",
-	"The following commands can be used with StupidServ",
-	"",
-	"    SEND      Convert and send text",
-	"    CONVERT   Convert text and echo",
-	"    LIST      List languages available",
-	"    ABOUT     About StupidServ",
-	"    VERSION   StupidServ Version info",
-	NULL
-};
-
-const char *s_help_on_help[] = {
-	"",
-	"To use a command, type",
-	"    \2/msg StupidServ command\2",
-	"For for more information on a command, type", 
-	"    \2/msg StupidServ HELP command\2.",
-	NULL
-};
+const char s_help_send_oneline [] = "Convert and send text";
+const char s_help_convert_oneline [] = "Convert text and echo";
+const char s_help_list_oneline [] = "List languages available";
+const char s_help_about_oneline [] = "About StupidServ";
+const char s_help_version_oneline [] = "Display version info";
 
 const char *s_help_send[] = {
 	"Syntax: \2SEND <lang> <nick|channel> <text>\2",
@@ -68,13 +51,6 @@ const char *s_help_list[] = {
 	NULL
 };
 
-const char *s_help_about[] = {
-	"Syntax: \2ABOUT\2",
-	"",
-	"Gives information about StupidServ",
-	NULL
-};
-
 const char *s_help_version[] = {
 	"Syntax: \2VERSION\2",
 	"",
@@ -82,7 +58,7 @@ const char *s_help_version[] = {
 	NULL
 };
 
-const char *s_about[] = {
+const char *s_help_about[] = {
 	"\2StupidServ\2 was created with the help of some software",
 	"called TalkFilters which is a collection of Translators",
 	"created by a wide range of authors.",

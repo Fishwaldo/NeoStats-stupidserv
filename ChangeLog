@@ -7,6 +7,7 @@ StupidServ Module for NeoStats Changelog.
  - Changed to use new module export API (M)
  - Added missing NULL checks for finduser results to avoid referencing NULL pointers (M)
  - Removed local module_function table to use core for /VERSION replies (M)
+ - Use core bot message handler to process commands (M)
 
 1.2 - Fish
  - Ident should be shorter than 8 chars as per RFC
