@@ -5,7 +5,7 @@ StupidServ Module for NeoStats Changelog.
  - Added "make dist" support to makefile/configure (M)
  - Cleaned up help text and reformatted help to match the rest of NeoStats (M)
  - Changed to use new module export API (M)
-
+ - Added missing NULL checks for finduser results to avoid referencing NULL pointers (M)
 
 1.2 - Fish
  - Ident should be shorter than 8 chars as per RFC
