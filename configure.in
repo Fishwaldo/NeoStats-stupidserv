@@ -1,28 +1,20 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(ss.c)
 AC_CONFIG_HEADER(modconfig.h)
-
 PACKAGE=StupidServ
-MODULE_MAJOR=3
-MODULE_MINOR=0
-MODULE_REV=a2
-VERSION=$MODULE_MAJOR.$MODULE_MINOR.$MODULE_REV
+MODULE_MAJOR=1
+MODULE_MINOR=3
+VERSION=$MODULE_MAJOR.$MODULE_MINOR
 AC_DEFINE_UNQUOTED(MODULE_VERSION, "$VERSION")
 AC_DEFINE_UNQUOTED(MODULE_MAJOR, "$MODULE_MAJOR")
 AC_DEFINE_UNQUOTED(MODULE_MINOR, "$MODULE_MINOR")
-AC_DEFINE_UNQUOTED(MODULE_REV, "$MODULE_REV")
-DIRINST=~/NeoStats3.0/
-AC_PREFIX_DEFAULT(~/NeoStats3.0/)
+DIRINST=~/NeoStats/
+AC_PREFIX_DEFAULT(~/NeoStats/)
 CFLAGS="$CFLAGS -O2"
 
-case "$host_os" in
-*openbsd*)
-	MAKEDEPENDENCIES="";;
-*freebsd*)
-	MAKEDEPENDENCIES="";;
-*)
-	MAKEDEPENDENCIES="-include \$(OBJS:.o=.d)";;
-esac
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL 
 
 AC_MSG_CHECKING(Location of NeoStats...)
 AC_ARG_WITH(neostats, 
@@ -30,7 +22,8 @@ AC_ARG_WITH(neostats,
 [DIRINST=$withval])
 AC_MSG_RESULT($DIRINST)
 
-AC_CHECK_FILE($DIRINST/include/neostats.h, 
+
+AC_CHECK_FILE($DIRINST/include/dl.h, 
 [INCLUDEDIR="$DIRINST/include/"], 
 [AC_MSG_ERROR(Can't find existing NeoStats Installation please supply with --with-neostats option)])
 
@@ -42,9 +35,11 @@ AC_TRY_RUN(
 #include <config.h>
 #include <stdlib.h>
 int main(void) {
-	if (MAJOR >= 3) {
-		if (MINOR >= 0) {
-			exit(0);
+	if (MAJOR >= 2) {
+		if (MINOR >= 5) {
+			if (REV >= 14) {
+				exit(0);
+			}
 		}
 	}
 	exit(1);
@@ -53,10 +48,11 @@ int main(void) {
 	ns_version_ok='no',
 	ns_version_ok='no')
 if test "$ns_version_ok" = "yes"; then
-	AC_MSG_RESULT(Compatible version);
+	AC_MSG_RESULT(Compatible Version);
 else
-	AC_MSG_ERROR(This module requires NeoStats 3.0.a2 or higher)
+	AC_MSG_ERROR(This Module requires NeoStats 2.5.2 or Higher)
 fi
+
 
 dnl check if we are running with Debug....
 AC_MSG_CHECKING(Whether to Enable Debuging...)
@@ -75,21 +71,24 @@ AC_ARG_ENABLE(debug,
 AC_MSG_RESULT(no)
 )
 
-dnl Checks for programs.
-AC_PROG_CC
-AC_PROG_INSTALL 
-
 AC_SUBST(DIRINST)
-AC_SUBST(MAKEDEPENDENCIES)
 AC_SUBST(CFLAGS)
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 AC_OUTPUT(Makefile)
-echo "Configuration complete."
-read -p "Press Enter key to read the release notes"
-clear
-more RELNOTES
-echo "This Module was written by:"
-echo "	DeadNotBurried (dnb@majestic-liaisons.com)"
-echo "Run 'make' (or 'gmake' on some systems) to compile NeoStats."
-echo "If you require support, see the README file."
+echo "(*----------------------------------------------------------*)"
+echo "(| Important Instructions                                   |)"
+echo "(*----------------------------------------------------------*)"
+echo "(| Now that configure is complete, type 'make' to compile   |)"
+echo "(| the module. When the compile has completed, type         |)"
+echo "(| 'make install' to install the module.                    |)"
+echo "(| For BSD you might need to use 'gmake' and 'gmake install'|)"
+echo "(*----------------------------------------------------------*)"
+echo "(| For Support please visit:                                |)"
+echo "(|    IRC:                   /server irc.irc-chat.org       |)"
+echo "(|                                   #neostats channel      |)"
+echo "(|    WWW:   http://www.neostats.net/boards/                |)"
+echo "(*----------------------------------------------------------*)"
+echo "(|This Module was written by:                               |)"
+echo "(|	fish (fish@dynam.ac)                                |)"
+echo "(*----------------------------------------------------------*)"

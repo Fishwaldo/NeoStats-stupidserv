@@ -99,12 +99,12 @@ int ModSynch (void)
 		return NS_FAILURE;
 	}
 	return NS_SUCCESS;
-}
+};
 
 /*
  * 
  */
-int ModInit( void )
+int ModInit( Module *mod_ptr )
 {
 	return NS_SUCCESS;
 }
@@ -112,10 +112,9 @@ int ModInit( void )
 /*
  * 
  */
-int ModFini( void ) 
+void ModFini( void ) 
 {
-	return NS_SUCCESS;
-}
+};
 
 /*
  * Routine for convert
