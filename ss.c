@@ -24,9 +24,7 @@
 */
 
 #include <stdio.h>
-#include "dl.h"
-#include "stats.h"
-#include "conf.h"
+#include "neostats.h"
 #include "ss.h"
 #include "talkfilters.h"
 
