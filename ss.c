@@ -113,14 +113,14 @@ int __Bot_Message(char *origin, char **av, int ac)
     } else if (!strcasecmp(av[1], "SEND")) {
          if (ac < 5) {
              prefmsg(u->nick, s_StupidServ, "Syntax: /msg %s SEND <lang> <nick|channel> <text>", s_StupidServ);
-             prefmsg(u->nick, s_StupidServ, "For addtional help: /msg %s HELP", s_StupidServ);
+             prefmsg(u->nick, s_StupidServ, "For additional help: /msg %s HELP", s_StupidServ);
              return -1;
          }
          s_send(u, av, ac);
     } else if (!strcasecmp(av[1], "CONVERT")) {
         if (ac < 3) {
         	prefmsg(u->nick, s_StupidServ, "Syntax: /msg %s CONVERT <text>", s_StupidServ);
-            prefmsg(u->nick, s_StupidServ, "For addtional help: /msg %s HELP", s_StupidServ);
+            prefmsg(u->nick, s_StupidServ, "For additional help: /msg %s HELP", s_StupidServ);
             return -1;
         }
     	s_convert(u, av, ac);
@@ -208,7 +208,7 @@ static void s_version(User *u)
 	prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
 	prefmsg(u->nick, s_StupidServ, "%s Version: %s - running on: %s", s_StupidServ, my_info[0].module_version, me.name);
 	prefmsg(u->nick, s_StupidServ, "%s Author Fish <fish@neostats.net>", s_StupidServ);
-	prefmsg(u->nick, s_StupidServ, "Neostats Satistical Software: http://www.neostats.net");
+	prefmsg(u->nick, s_StupidServ, "Neostats Statistical Software: http://www.neostats.net");
 }
 
 /*
