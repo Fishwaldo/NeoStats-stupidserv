@@ -94,7 +94,7 @@ static BotInfo ss_botinfo =
  */
 int ModSynch (void)
 {
-	ss_bot = init_bot (&ss_botinfo);
+	ss_bot = AddBot (&ss_botinfo);
 	if (!ss_bot) {
 		return NS_FAILURE;
 	}
@@ -104,7 +104,7 @@ int ModSynch (void)
 /*
  * 
  */
-int __ModInit(int modnum, int apiver)
+int ModInit( Module *mod_ptr )
 {
 	return NS_SUCCESS;
 }
@@ -112,7 +112,7 @@ int __ModInit(int modnum, int apiver)
 /*
  * 
  */
-void __ModFini()
+void ModFini( void ) 
 {
 };
 
@@ -169,12 +169,12 @@ static int s_send (CmdParams* cmdparams)
 	char outbuf[450];
         
 	SET_SEGV_LOCATION();
-	if (find_chan(cmdparams->av[1])) {
+	if (FindChannel(cmdparams->av[1])) {
 		if (UserLevel(cmdparams->source) < NS_ULEVEL_OPER) {
 		    irc_prefmsg (ss_bot, cmdparams->source, "Only Operators can send to channels.");
 	    	return NS_SUCCESS;
     	}
-    } else if (!find_user(cmdparams->av[1])) {
+    } else if (!FindUser(cmdparams->av[1])) {
         irc_prefmsg (ss_bot, cmdparams->source, "That user cannot be found on IRC. As a result, your message was not sent. Please check the spelling and try again!");
        	return NS_SUCCESS;
     }
@@ -190,8 +190,8 @@ static int s_send (CmdParams* cmdparams)
 	if (fp->filter(inbuf, outbuf, 450) > 0) {
 		irc_prefmsg (ss_bot, cmdparams->source, "Translated Text was too Long. Sending shortened text only");
 	}
-	irc_prefmsg (ss_bot, find_user(cmdparams->av[1]), "%s is talking %s, and sent this:", cmdparams->source->name, cmdparams->av[0]);
-	irc_prefmsg (ss_bot, find_user(cmdparams->av[1]), "%s", outbuf);
+	irc_prefmsg (ss_bot, FindUser(cmdparams->av[1]), "%s is talking %s, and sent this:", cmdparams->source->name, cmdparams->av[0]);
+	irc_prefmsg (ss_bot, FindUser(cmdparams->av[1]), "%s", outbuf);
 	irc_prefmsg (ss_bot, cmdparams->source, "Your Message was sent to %s", cmdparams->av[1]);
 	free(inbuf);
 	return NS_SUCCESS;
