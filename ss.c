@@ -47,7 +47,7 @@ static int s_about(User *u, char **av, int ac);
 static bot_cmd ss_commands[]=
 {
 	{"SEND",	s_send,		3, 	0,	s_help_send, 	s_help_send_oneline },
-	{"CONVERT", s_convert,	1, 	0,	s_help_convert,	s_help_convert_oneline },
+	{"CONVERT", s_convert,	2, 	0,	s_help_convert,	s_help_convert_oneline },
 	{"LIST",	s_list,		0, 	0,	s_help_list, 	s_help_list_oneline },
 	{"VERSION", s_version,	0, 	0,	s_help_version,	s_help_version_oneline },
 	{"ABOUT",	s_about,	0, 	0,	s_help_about,	s_help_about_oneline },
