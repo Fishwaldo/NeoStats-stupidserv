@@ -1,5 +1,8 @@
 StupidServ Module for NeoStats Changelog.
 ==============================================================================
+1.2 - Fish
+- Ident should be shorter than 8 chars as per RFC
+
 1.1 - Fish
 - Fix a compile problem with getopts
 - Fix a problem with make re-doing flex files
