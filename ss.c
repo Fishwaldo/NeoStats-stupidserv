@@ -39,7 +39,7 @@ static ModUser *ss_bot;
 struct ss_cfg { 
 	char user[MAXUSER];
 	char host[MAXHOST];
-	char rname[MAXREALNAME];
+	char realname[MAXREALNAME];
 } ss_cfg;
 
 /*
@@ -66,7 +66,7 @@ static bot_setting ss_settings[]=
 	{"NICK",	&s_StupidServ,	SET_TYPE_NICK,		0, MAXNICK, 	NS_ULEVEL_ADMIN, "Nick",	NULL,	ns_help_set_nick },
 	{"USER",	&ss_cfg.user,	SET_TYPE_USER,		0, MAXUSER, 	NS_ULEVEL_ADMIN, "User",	NULL,	ns_help_set_user },
 	{"HOST",	&ss_cfg.host,	SET_TYPE_HOST,		0, MAXHOST, 	NS_ULEVEL_ADMIN, "Host",	NULL,	ns_help_set_host },
-	{"REALNAME",&ss_cfg.rname,	SET_TYPE_REALNAME,	0, MAXREALNAME, NS_ULEVEL_ADMIN, "RealName",NULL,	ns_help_set_realname },
+	{"REALNAME",&ss_cfg.realname,SET_TYPE_REALNAME,	0, MAXREALNAME, NS_ULEVEL_ADMIN, "RealName",NULL,	ns_help_set_realname },
 	{NULL,		NULL,			0,					0, 0, 	0,				 NULL,			NULL,	NULL	},
 };
 
@@ -87,7 +87,7 @@ ModuleInfo __module_info = {
  */
 static int Online(char **av, int ac) 
 {
-	ss_bot = init_mod_bot(s_StupidServ, ss_cfg.user, ss_cfg.host, ss_cfg.rname, 
+	ss_bot = init_mod_bot(s_StupidServ, ss_cfg.user, ss_cfg.host, ss_cfg.realname, 
 		services_bot_modes, BOT_FLAG_DEAF, ss_commands, ss_settings, __module_info.module_name);
     return 1;
 };
@@ -135,10 +135,10 @@ int __ModInit(int modnum, int apiver)
 		free(temp);
 	}
 	if(GetConf((void *) &temp, CFGSTR, "RealName") < 0) {
-		strlcpy(ss_cfg.rname, "A Network Morale Service", MAXREALNAME);
+		strlcpy(ss_cfg.realname, "A Network Morale Service", MAXREALNAME);
 	}
 	else {
-		strlcpy(ss_cfg.rname, temp, MAXREALNAME);
+		strlcpy(ss_cfg.realname, temp, MAXREALNAME);
 		free(temp);
 	}
 	return 1;
