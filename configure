@@ -1223,7 +1223,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
           ac_config_headers="$ac_config_headers modconfig.h"
 
 PACKAGE=StupidServ
-VERSION=1.0
+VERSION=1.3
 DIRINST=~/NeoStats/
 
 CFLAGS="$CFLAGS -O2"
@@ -2949,6 +2949,8 @@ s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t
 s,@INSTALL_DATA@,$INSTALL_DATA,;t t
 s,@DIRINST@,$DIRINST,;t t
+s,@PACKAGE@,$PACKAGE,;t t
+s,@VERSION@,$VERSION,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF

@@ -13,6 +13,8 @@ OBJECTS= ss.o b1ff.o chef.o common.o fudd.o jethro.o kraut.o postmodern.o talkfi
 TARGET= ss.so
 DOCS=README.StupidServ
 DATA=
+DISTFILES = $(SOURCES) $(DATA) $(DOCS) modconfig.h.in configure install-sh ChangeLog Makefile.in common.h s_help.c talkfilters.h
+distdir = @PACKAGE@-@VERSION@
 
 
 all:	 module
@@ -32,3 +34,16 @@ install: module
 
 $(OBJECTS): Makefile
 
+dist:	
+	@echo -n "Creating Directories"
+	@-rm -rf $(distdir)
+	@mkdir $(distdir)
+	@echo "Done"
+	@echo -n "Coping Core Distribution Files"
+	@for file in $(DISTFILES); do \
+		echo -n "."; \
+		cp -pr $$file $(distdir)/$$file; \
+	done
+	@echo "Done"
+	@tar -czf $(distdir).tar.gz $(distdir)/*
+	@echo "Tar file $(distdir).tar.gz created, Freshmeat Time"
