@@ -1,20 +1,20 @@
 #Neostats Module Makefile!
 CC=@CC@
 CFLAGS=@CFLAGS@
-LDFLAGS= @LIBS@
-INSTALL = @INSTALL@                                                                                                                 
-INSTALL_PROGRAM = @INSTALL_PROGRAM@                                                                                                 
-INSTALL_DATA = @INSTALL_DATA@
+LDFLAGS=@LIBS@
+INSTALL =@INSTALL@                                                                                                                 
+INSTALL_PROGRAM =@INSTALL_PROGRAM@                                                                                                 
+INSTALL_DATA =@INSTALL_DATA@
 DIRECTORY=@DIRINST@/dl/
 INCLUDES=-I@DIRINST@/include/ -I.
 
-SOURCES= ss.c b1ff.c chef.c common.c fudd.c jethro.c kraut.c postmodern.c talkfilters.c  warez.c brooklyn.c cockney.c drawl.c funetak.c jive.c pansy.c redneck.c valspeak.c
-OBJECTS= ss.o b1ff.o chef.o common.o fudd.o jethro.o kraut.o postmodern.o talkfilters.o  warez.o brooklyn.o cockney.o drawl.o funetak.o jive.o pansy.o redneck.o valspeak.o
+SRCS= ss.c b1ff.c chef.c common.c fudd.c jethro.c kraut.c postmodern.c talkfilters.c  warez.c brooklyn.c cockney.c drawl.c funetak.c jive.c pansy.c redneck.c valspeak.c
+OBJS= ${SRCS:.c=.o}
 TARGET= ss.so
 DOCS=README.StupidServ
 DATA=
-DISTFILES = $(SOURCES) $(DATA) $(DOCS) modconfig.h.in configure install-sh ChangeLog Makefile.in common.h s_help.c talkfilters.h
-distdir = @PACKAGE@-@VERSION@
+DISTFILES = $(SRCS) $(DATA) $(DOCS) modconfig.h.in configure install-sh ChangeLog Makefile.in common.h s_help.c talkfilters.h
+DISTDIR = @PACKAGE@-@VERSION@
 
 
 all:	 module
@@ -22,8 +22,8 @@ all:	 module
 .c.o:	
 	 $(CC) -c -DHAVE_CONFIG_H -DLIBRARY_MODE $(CFLAGS) $(INCLUDES) $<
 
-module:	 $(OBJECTS)
-	 $(LD) -shared -o $(TARGET) $(LDFLAGS) $(OBJECTS)
+module:	 $(OBJS)
+	 $(LD) -shared -o $(TARGET) $(LDFLAGS) $(OBJS)
 
 clean:
 	 /bin/rm -rf $(TARGET) *.o Makefile *.log modconfig.h
@@ -32,18 +32,18 @@ install: module
 	 $(INSTALL) -m 644 $(TARGET) $(DIRECTORY)
 	 $(INSTALL) -m 644 $(DOCS) $(DIRECTORY)../doc/
 
-$(OBJECTS): Makefile
+$(OBJS): Makefile
 
 dist:	
 	@echo -n "Creating Directories"
-	@-rm -rf $(distdir)
-	@mkdir $(distdir)
+	@-rm -rf $(DISTDIR)
+	@mkdir $(DISTDIR)
 	@echo "Done"
-	@echo -n "Coping Core Distribution Files"
+	@echo -n "Copying Core Distribution Files"
 	@for file in $(DISTFILES); do \
 		echo -n "."; \
-		cp -pr $$file $(distdir)/$$file; \
+		cp -pr $$file $(DISTDIR)/$$file; \
 	done
 	@echo "Done"
-	@tar -czf $(distdir).tar.gz $(distdir)/*
-	@echo "Tar file $(distdir).tar.gz created, Freshmeat Time"
+	@tar -czf $(DISTDIR).tar.gz $(DISTDIR)/*
+	@echo "Tar file $(DISTDIR).tar.gz created, Freshmeat Time"
