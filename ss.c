@@ -24,6 +24,7 @@
 */
 
 #include <stdio.h>
+#include "modconfig.h"
 #include "neostats.h"
 #include "ss.h"
 #include "talkfilters.h"
@@ -75,7 +76,7 @@ static bot_setting ss_settings[]=
 ModuleInfo __module_info = {
     "StupidServ",
     "A Language Translator",
-    "1.3",
+    MODULE_VERSION,
 	__DATE__,
 	__TIME__
 };
