@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include "dl.h"
 #include "stats.h"
-#include "s_help.c"
+#include "ss.h"
 #include "talkfilters.h"
 
 /*
@@ -104,7 +104,6 @@ void __ModFini()
 static int s_version(User *u, char **av, int ac)
 {
 	SET_SEGV_LOCATION();
-    chanalert(s_Services,"%s Wanted to know the current version information for %s",u->nick,s_StupidServ);
 	prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
 	prefmsg(u->nick, s_StupidServ, "%s Version: %s Compiled %s at %s", s_StupidServ, 
 		__module_info.module_version, __module_info.module_build_date, __module_info.module_build_time);

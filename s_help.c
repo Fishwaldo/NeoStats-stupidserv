@@ -23,6 +23,8 @@
 ** $Id: s_help.c,v 1.1 2003/02/18 13:53:03 fishwaldo Exp $
 */
 
+#include <stdio.h>
+
 const char s_help_send_oneline [] = "Convert and send text";
 const char s_help_convert_oneline [] = "Convert text and echo";
 const char s_help_list_oneline [] = "List languages available";

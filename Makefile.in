@@ -8,12 +8,12 @@ INSTALL_DATA = @INSTALL_DATA@
 DIRECTORY = @DIRINST@/dl/
 INCLUDES = -I@DIRINST@/include/ -I.
 
-SRCS= ss.c b1ff.c chef.c common.c fudd.c jethro.c kraut.c postmodern.c talkfilters.c  warez.c brooklyn.c cockney.c drawl.c funetak.c jive.c pansy.c redneck.c valspeak.c
+SRCS= ss.c s_help.c b1ff.c chef.c common.c fudd.c jethro.c kraut.c postmodern.c talkfilters.c  warez.c brooklyn.c cockney.c drawl.c funetak.c jive.c pansy.c redneck.c valspeak.c
 OBJS= ${SRCS:.c=.o}
 TARGET= stupidserv.so
 DOCS=README.StupidServ
 DATA=
-DISTFILES = $(SRCS) $(DATA) $(DOCS) modconfig.h.in configure install-sh ChangeLog Makefile.in common.h s_help.c talkfilters.h
+DISTFILES = $(SRCS) $(DATA) $(DOCS) modconfig.h.in configure install-sh ChangeLog Makefile.in common.h talkfilters.h ss.h
 DISTDIR = @PACKAGE@-@VERSION@
 
 

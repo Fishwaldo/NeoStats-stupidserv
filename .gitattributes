@@ -42,6 +42,7 @@ flex/warez.l -text
 /redneck.c -text
 /s_help.c -text
 /ss.c -text
+/ss.h -text
 /stamp-h1 -text
 /talkfilters.c -text
 /talkfilters.h -text
