@@ -60,6 +60,17 @@ static bot_cmd ss_commands[]=
 	{"ABOUT",	s_about,	0, 	0,	s_help_about,	s_help_about_oneline },
 	{NULL,		NULL,		0, 	0,					NULL, 			NULL}
 };							
+
+static bot_setting ss_settings[]=
+{
+	{"NICK",	&s_StupidServ,	SET_TYPE_STRING,	0, MAXNICK, 	NS_ULEVEL_ADMIN, "Nick",	NULL,	ss_help_set_nick },
+	{"USER",	&ss_cfg.user,	SET_TYPE_STRING,	0, MAXUSER, 	NS_ULEVEL_ADMIN, "User",	NULL,	ss_help_set_user },
+	{"HOST",	&ss_cfg.host,	SET_TYPE_STRING,	0, MAXHOST, 	NS_ULEVEL_ADMIN, "Host",	NULL,	ss_help_set_host },
+	{"REALNAME",&ss_cfg.rname,	SET_TYPE_STRING,	0, MAXREALNAME, NS_ULEVEL_ADMIN, "RealName",NULL,	ss_help_set_realname },
+	{NULL,		NULL,			0,					0, 0, 	0,				 NULL,			NULL,	NULL	},
+};
+
+
 /*
  * Module info descriptor
  */
@@ -77,7 +88,7 @@ ModuleInfo __module_info = {
 static int Online(char **av, int ac) 
 {
 	ss_bot = init_mod_bot(s_StupidServ, ss_cfg.user, ss_cfg.host, ss_cfg.rname, 
-		services_bot_modes, BOT_FLAG_DEAF, ss_commands, NULL, __module_info.module_name);
+		services_bot_modes, BOT_FLAG_DEAF, ss_commands, ss_settings, __module_info.module_name);
     return 1;
 };
 

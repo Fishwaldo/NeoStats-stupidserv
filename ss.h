@@ -33,3 +33,7 @@ extern const char *s_help_convert[];
 extern const char *s_help_list[];
 extern const char *s_help_version[];
 extern const char *s_help_about[];
+extern const char *ss_help_set_nick[];
+extern const char *ss_help_set_user[];
+extern const char *ss_help_set_host[];
+extern const char *ss_help_set_realname[];
