@@ -12,7 +12,6 @@
 /cockney.c -text
 /common.c -text
 /common.h -text
-/config.status -text
 /configure -text
 /configure.in -text
 /drawl.c -text
