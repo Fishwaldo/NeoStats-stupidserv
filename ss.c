@@ -134,7 +134,7 @@ int __ModInit(int modnum, int apiver)
 		free(temp);
 	}
 	if(GetConf((void *) &temp, CFGSTR, "RealName") < 0) {
-		strlcpy(ss_cfg.realname, "A Network Morale Service", MAXREALNAME);
+		strlcpy(ss_cfg.realname, "A Language Translator", MAXREALNAME);
 	}
 	else {
 		strlcpy(ss_cfg.realname, temp, MAXREALNAME);
