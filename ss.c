@@ -30,12 +30,6 @@
 #include "talkfilters.h"
 
 /*
- * StupidServ build version info
- */
-const char ssversion_date[] = __DATE__;
-const char ssversion_time[] = __TIME__;
-
-/*
  * StupidServ name
  */
 char *s_StupidServ;
@@ -51,25 +45,27 @@ static void s_version(User *u);
 /*
  * Module info descriptor
  */
-Module_Info my_info[] = { {
+ModuleInfo __module_info = {
     "StupidServ",
     "A Language Translator",
-    "1.1"
-} };
+    "1.1",
+	__DATE__,
+	__TIME__
+};
 
 /*
  * /VERSION command
  */
 int new_m_version(char *origin, char **av, int ac) 
 {
-    snumeric_cmd(351, origin, "Module StupidServ Loaded, Version: %s %s %s",my_info[0].module_version,ssversion_date,ssversion_time);
+	snumeric_cmd(351, origin, "Module StupidServ Loaded, Version: %s %s %s",__module_info.module_version,__module_info.module_build_date,__module_info.module_build_time);
     return 0;
 }
 
 /*
  * IRC commands that StupidServ responds to
  */
-Functions my_fn_list[] = {
+Functions __module_functions[] = {
         { MSG_VERSION,  new_m_version,  1 },
 #ifdef HAVE_TOKEN_SUP
         { TOK_VERSION,  new_m_version,  1 },
@@ -143,10 +139,10 @@ int __Bot_Message(char *origin, char **av, int ac)
  */
 int Online(char **av, int ac) 
 {
-    if (init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", my_info[0].module_name) == -1 ) {
+    if (init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", __module_info.module_name) == -1 ) {
         /* Nick was in use */
         s_StupidServ = strcat(s_StupidServ, "_");
-        init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", my_info[0].module_name);
+        init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", __module_info.module_name);
     }
     return 1;
 };
@@ -154,33 +150,9 @@ int Online(char **av, int ac)
 /*
  * IRC events that StupidServ responds to 
  */
-EventFnList my_event_list[] = {
+EventFnList __module_events[] = {
     { "ONLINE",     Online},
     { NULL,     NULL}
-};
-
-/*
- * 
- */
-Module_Info *__module_get_info() 
-{
-    return my_info;
-};
-
-/*
- * 
- */
-Functions *__module_get_functions() 
-{
-    return my_fn_list;
-};
-
-/*
- * 
- */
-EventFnList *__module_get_events() 
-{
-    return my_event_list;
 };
 
 /*
@@ -206,7 +178,7 @@ static void s_version(User *u)
 {
 	SET_SEGV_LOCATION();
 	prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
-	prefmsg(u->nick, s_StupidServ, "%s Version: %s - running on: %s", s_StupidServ, my_info[0].module_version, me.name);
+	prefmsg(u->nick, s_StupidServ, "%s Version: %s - running on: %s", s_StupidServ, __module_info.module_version, me.name);
 	prefmsg(u->nick, s_StupidServ, "%s Author Fish <fish@neostats.net>", s_StupidServ);
 	prefmsg(u->nick, s_StupidServ, "Neostats Statistical Software: http://www.neostats.net");
 }
