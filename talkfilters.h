@@ -23,7 +23,7 @@
 
 #include <sys/types.h>
 
-// filter lookup interface
+/* filter lookup interface */
 
 typedef struct
   {
@@ -38,7 +38,7 @@ extern const gtf_filter_t *gtf_filter_list(void);
 
 extern const gtf_filter_t *gtf_filter_lookup(const char *name);
 
-// individual filters
+/* individual filters */
 
 extern int gtf_filter_b1ff(const char *input, char *buf, size_t bufsz);
 
