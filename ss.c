@@ -180,9 +180,10 @@ static void s_version(User *u)
 {
 	SET_SEGV_LOCATION();
 	prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
-	prefmsg(u->nick, s_StupidServ, "%s Version: %s - running on: %s", s_StupidServ, __module_info.module_version, me.name);
+	prefmsg(u->nick, s_StupidServ, "%s Version: %s Compiled %s at %s", s_StupidServ, 
+		__module_info.module_version, __module_info.module_build_date, __module_info.module_build_time);
 	prefmsg(u->nick, s_StupidServ, "%s Author Fish <fish@neostats.net>", s_StupidServ);
-	prefmsg(u->nick, s_StupidServ, "Neostats Statistical Software: http://www.neostats.net");
+	prefmsg(u->nick, s_StupidServ, "http://www.neostats.net");
 }
 
 /*
