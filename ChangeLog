@@ -1,16 +1,16 @@
 StupidServ Module for NeoStats Changelog.
 ==============================================================================
-1.3 - 29/09/200 - Fish
-- Added Marks segv code and modinit tidyups
-- (M) Added "make dist" support to makefile/configure
-- (M) Cleaned up help text and reformatted help to match the rest of NeoStats
+1.3 - 29/09/200 - Fish (F) & Mark *(M)
+ - Added Marks segv code and modinit tidyups (M/F)
+ - Added "make dist" support to makefile/configure (M)
+ - Cleaned up help text and reformatted help to match the rest of NeoStats (M)
 
 1.2 - Fish
-- Ident should be shorter than 8 chars as per RFC
+ - Ident should be shorter than 8 chars as per RFC
 
 1.1 - Fish
-- Fix a compile problem with getopts
-- Fix a problem with make re-doing flex files
+ - Fix a compile problem with getopts
+ - Fix a problem with make re-doing flex files
 
 1.0 - Fish 
-- Initial Release
+ - Initial Release
