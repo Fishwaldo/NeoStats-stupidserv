@@ -132,19 +132,22 @@ EventFnList *__module_get_events() {
     return my_event_list;
 };
 
-void _init() {
+int __ModInit()
+{
     s_StupidServ = "StupidServ";
+	return 1;
 }
 
 
-void _fini() {
+void __ModFini()
+{
 };
 
 
 /* Routine for VERSION */
 static void s_version(User *u)
 {
-        strcpy(segv_location, "ms_version");
+	SET_SEGV_LOCATION();
         prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
         prefmsg(u->nick, s_StupidServ, "%s Version: %s - running on: %s", s_StupidServ, my_info[0].module_version, me.name);
         prefmsg(u->nick, s_StupidServ, "%s Author Fish <fish@neostats.net>", s_StupidServ);
@@ -156,7 +159,7 @@ static void s_convert(User *u, char **cmd, int ac) {
         char *inbuf;
         char outbuf[450];
         
-        strcpy(segv_location, "s_convert");
+	SET_SEGV_LOCATION();
 
 	/* now find the language they want */
 	fp = gtf_filter_lookup(cmd[2]);
@@ -187,7 +190,7 @@ static void s_send(User *u, char **cmd, int ac) {
         char *inbuf;
         char outbuf[450];
         
-        strcpy(segv_location, "ms_behappy");
+	SET_SEGV_LOCATION();
 
 	if (findchan(cmd[3])) {
 		if (UserLevel(u) < 40) {
