@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include "dl.h"
 #include "stats.h"
+#include "conf.h"
 #include "ss.h"
 #include "talkfilters.h"
 
@@ -34,6 +35,12 @@
  */
 static char s_StupidServ[MAXNICK];
 static ModUser *ss_bot;
+
+struct ss_cfg { 
+	char user[MAXUSER];
+	char host[MAXHOST];
+	char rname[MAXREALNAME];
+} ss_cfg;
 
 /*
  * Local declarations
@@ -69,7 +76,7 @@ ModuleInfo __module_info = {
  */
 static int Online(char **av, int ac) 
 {
-	ss_bot = init_mod_bot(s_StupidServ, "SS", me.name, "A Network Morale Service", 
+	ss_bot = init_mod_bot(s_StupidServ, ss_cfg.user, ss_cfg.host, ss_cfg.rname, 
 		services_bot_modes, BOT_FLAG_DEAF, ss_commands, NULL, __module_info.module_name);
     return 1;
 };
@@ -87,7 +94,36 @@ EventFnList __module_events[] = {
  */
 int __ModInit(int modnum, int apiver)
 {
-    strlcpy(s_StupidServ ,"StupidServ" ,MAXNICK);
+ 	char *temp = NULL;
+
+	if(GetConf((void *) &temp, CFGSTR, "Nick") < 0) {
+		strlcpy(s_StupidServ ,"StupidServ" ,MAXNICK);
+	}
+	else {
+		strlcpy(s_StupidServ , temp, MAXNICK);
+		free(temp);
+	}
+	if(GetConf((void *) &temp, CFGSTR, "User") < 0) {
+		strlcpy(ss_cfg.user, "SS", MAXUSER);
+	}
+	else {
+		strlcpy(ss_cfg.user, temp, MAXUSER);
+		free(temp);
+	}
+	if(GetConf((void *) &temp, CFGSTR, "Host") < 0) {
+		strlcpy(ss_cfg.host, me.name, MAXHOST);
+	}
+	else {
+		strlcpy(ss_cfg.host, temp, MAXHOST);
+		free(temp);
+	}
+	if(GetConf((void *) &temp, CFGSTR, "RealName") < 0) {
+		strlcpy(ss_cfg.rname, "A Network Morale Service", MAXREALNAME);
+	}
+	else {
+		strlcpy(ss_cfg.rname, temp, MAXREALNAME);
+		free(temp);
+	}
 	return 1;
 }
 
