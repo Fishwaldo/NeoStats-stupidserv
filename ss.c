@@ -153,7 +153,7 @@ int Online(char **av, int ac)
  * IRC events that StupidServ responds to 
  */
 EventFnList __module_events[] = {
-    { "ONLINE",     Online},
+    { EVENT_ONLINE,     Online},
     { NULL,     NULL}
 };
 
