@@ -238,7 +238,7 @@ static void s_send(User *u, char **cmd, int ac)
 	SET_SEGV_LOCATION();
 
 	if (findchan(cmd[3])) {
-		if (UserLevel(u) < 40) {
+		if (UserLevel(u) < NS_ULEVEL_OPER) {
 		    prefmsg(u->nick, s_StupidServ, "Only Operators can send to channels.");
 	    	}
         } else if (!finduser(cmd[3])) {
