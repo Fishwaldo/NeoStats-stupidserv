@@ -95,28 +95,3 @@ const char *s_help_about[] = {
 	"warez      - Ian Johnston",
 	NULL
 };
-
-const char *ss_help_set_nick[] = {
-	"NICK <newnick> Change bot nickname",
-	"(requires restart to take effect).",
-	NULL
-};
-
-const char *ss_help_set_user[] = {
-	"USER <username> Change bot username",
-	"(requires restart to take effect).",
-	NULL
-};
-
-const char *ss_help_set_host[] = {
-	"HOST <host> Change bot host",
-	"(requires restart to take effect).",
-	NULL
-};
-
-const char *ss_help_set_realname[] = {
-	"REALNAME <realname> Change bot realname",
-	"(requires restart to take effect).",
-	NULL
-};
-
