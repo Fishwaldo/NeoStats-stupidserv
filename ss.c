@@ -32,7 +32,7 @@
 /*
  * StupidServ name
  */
-char *s_StupidServ;
+static char s_StupidServ[MAXNICK];
 
 /*
  * Local declarations
@@ -54,29 +54,9 @@ ModuleInfo __module_info = {
 };
 
 /*
- * /VERSION command
- */
-int new_m_version(char *origin, char **av, int ac) 
-{
-	snumeric_cmd(RPL_VERSION, origin, "Module StupidServ Loaded, Version: %s %s %s",__module_info.module_version,__module_info.module_build_date,__module_info.module_build_time);
-    return 0;
-}
-
-/*
- * IRC commands that StupidServ responds to
- */
-Functions __module_functions[] = {
-        { MSG_VERSION,  new_m_version,  1 },
-#ifdef HAVE_TOKEN_SUP
-        { TOK_VERSION,  new_m_version,  1 },
-#endif
-	{ NULL,        NULL,        0 }
-};
-
-/*
  * Message processor for StupidServ
  */
-int __Bot_Message(char *origin, char **av, int ac)
+int __BotMessage(char *origin, char **av, int ac)
 {
     User *u;
     u = finduser(origin);
@@ -139,11 +119,11 @@ int __Bot_Message(char *origin, char **av, int ac)
 /*
  * Introduce the StupidServ bot onto the network
  */
-int Online(char **av, int ac) 
+static int Online(char **av, int ac) 
 {
     if (init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", __module_info.module_name) == -1 ) {
         /* Nick was in use */
-        s_StupidServ = strcat(s_StupidServ, "_");
+        strlcat(s_StupidServ, "_", MAXNICK);
         init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", __module_info.module_name);
     }
     return 1;
@@ -162,7 +142,7 @@ EventFnList __module_events[] = {
  */
 int __ModInit(int modnum, int apiver)
 {
-    s_StupidServ = "StupidServ";
+    strlcpy(s_StupidServ ,"StupidServ" ,MAXNICK);
 	return 1;
 }
 

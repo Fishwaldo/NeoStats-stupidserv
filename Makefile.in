@@ -1,12 +1,12 @@
 #Neostats Module Makefile!
-CC=@CC@
-CFLAGS=@CFLAGS@
-LDFLAGS=@LIBS@
-INSTALL =@INSTALL@                                                                                                                 
-INSTALL_PROGRAM =@INSTALL_PROGRAM@                                                                                                 
-INSTALL_DATA =@INSTALL_DATA@
-DIRECTORY=@DIRINST@/dl/
-INCLUDES=-I@DIRINST@/include/ -I.
+CC = @CC@
+CFLAGS = @CFLAGS@
+LDFLAGS = @LIBS@
+INSTALL = @INSTALL@                                                                                                                 
+INSTALL_PROGRAM = @INSTALL_PROGRAM@                                                                                                 
+INSTALL_DATA = @INSTALL_DATA@
+DIRECTORY = @DIRINST@/dl/
+INCLUDES = -I@DIRINST@/include/ -I.
 
 SRCS= ss.c b1ff.c chef.c common.c fudd.c jethro.c kraut.c postmodern.c talkfilters.c  warez.c brooklyn.c cockney.c drawl.c funetak.c jive.c pansy.c redneck.c valspeak.c
 OBJS= ${SRCS:.c=.o}
