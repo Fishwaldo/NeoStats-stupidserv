@@ -29,33 +29,46 @@
 #include "s_help.c"
 #include "talkfilters.h"
 
-const char msversion_date[] = __DATE__;
-const char msversion_time[] = __TIME__;
-char *s_StupidServ;
-const char *s_help[];
-const char *s_about[];
+/*
+ * StupidServ build version info
+ */
+const char ssversion_date[] = __DATE__;
+const char ssversion_time[] = __TIME__;
 
+/*
+ * StupidServ name
+ */
+char *s_StupidServ;
+
+/*
+ * Local declarations
+ */
 static void s_send(User *u, char **cmd, int ac);
 static void s_convert(User *u, char **cmd, int ac);
 static void s_list(User *u);
 static void s_version(User *u);
 
-
-
-
-
+/*
+ * Module info descriptor
+ */
 Module_Info my_info[] = { {
     "StupidServ",
     "A Language Translator",
     "1.1"
 } };
 
-
-int new_m_version(char *origin, char **av, int ac) {
-    snumeric_cmd(351, origin, "Module StupidServ Loaded, Version: %s %s %s",my_info[0].module_version,msversion_date,msversion_time);
+/*
+ * /VERSION command
+ */
+int new_m_version(char *origin, char **av, int ac) 
+{
+    snumeric_cmd(351, origin, "Module StupidServ Loaded, Version: %s %s %s",my_info[0].module_version,ssversion_date,ssversion_time);
     return 0;
 }
 
+/*
+ * IRC commands that StupidServ responds to
+ */
 Functions my_fn_list[] = {
         { MSG_VERSION,  new_m_version,  1 },
 #ifdef HAVE_TOKEN_SUP
@@ -64,27 +77,51 @@ Functions my_fn_list[] = {
 	{ NULL,        NULL,        0 }
 };
 
-
+/*
+ * Message processor for StupidServ
+ */
 int __Bot_Message(char *origin, char **av, int ac)
 {
     User *u;
     u = finduser(origin);
 
     if (!strcasecmp(av[1], "HELP")) {
-        privmsg_list(u->nick, s_StupidServ, s_help);        
+		if (ac <= 2) {
+			privmsg_list(u->nick, s_StupidServ, s_help);
+			privmsg_list(u->nick, s_StupidServ, s_help_on_help);
+			return 1;
+		} else if (!strcasecmp(av[2], "SEND")) {
+			privmsg_list(u->nick, s_StupidServ, s_help_send);
+			return 1;
+		} else if (!strcasecmp(av[2], "CONVERT")) {
+			privmsg_list(u->nick, s_StupidServ, s_help_convert);
+			return 1;
+		} else if (!strcasecmp(av[2], "LIST")) {
+			privmsg_list(u->nick, s_StupidServ, s_help_list);
+			return 1;
+		} else if (!strcasecmp(av[2], "ABOUT")) {
+			privmsg_list(u->nick, s_StupidServ, s_help_about);
+			return 1;
+		} else if (!strcasecmp(av[2], "VERSION")) {
+			privmsg_list(u->nick, s_StupidServ, s_help_version);
+			return 1;
+		} else {
+			prefmsg(u->nick, s_StupidServ,
+				"Unknown Help Topic: \2%s\2", av[2]);
+		}
         return 1;
     } else if (!strcasecmp(av[1], "SEND")) {
          if (ac < 5) {
-             prefmsg(u->nick, s_StupidServ, "Syntax: /msg %s SAY <LANG> <NICK TO SEND TO> <TEXT>", s_StupidServ);
+             prefmsg(u->nick, s_StupidServ, "Syntax: /msg %s SEND <lang> <nick|channel> <text>", s_StupidServ);
              prefmsg(u->nick, s_StupidServ, "For addtional help: /msg %s HELP", s_StupidServ);
              return -1;
-             }
+         }
          s_send(u, av, ac);
     } else if (!strcasecmp(av[1], "CONVERT")) {
-        if (ac < 4) {
-        	prefmsg(u->nick, s_StupidServ, "Syntax: /msg %s CONVERT <LANG> <NICK TO SEND TO>", s_StupidServ);
-                prefmsg(u->nick, s_StupidServ, "For addtional help: /msg %s HELP", s_StupidServ);
-                return -1;
+        if (ac < 3) {
+        	prefmsg(u->nick, s_StupidServ, "Syntax: /msg %s CONVERT <text>", s_StupidServ);
+            prefmsg(u->nick, s_StupidServ, "For addtional help: /msg %s HELP", s_StupidServ);
+            return -1;
         }
     	s_convert(u, av, ac);
     } else if (!strcasecmp(av[1], "LIST")) {
@@ -99,11 +136,13 @@ int __Bot_Message(char *origin, char **av, int ac)
         prefmsg(u->nick, s_StupidServ, "Unknown Command: \2%s\2, perhaps you need some HELP?", av[1]);
     }
     return 1;
-
-
 }
 
-int Online(char **av, int ac) {
+/*
+ * Introduce the StupidServ bot onto the network
+ */
+int Online(char **av, int ac) 
+{
     if (init_bot(s_StupidServ,"SS",me.name,"A Network Morale Service", "+oS", my_info[0].module_name) == -1 ) {
         /* Nick was in use */
         s_StupidServ = strcat(s_StupidServ, "_");
@@ -112,52 +151,74 @@ int Online(char **av, int ac) {
     return 1;
 };
 
-
+/*
+ * IRC events that StupidServ responds to 
+ */
 EventFnList my_event_list[] = {
     { "ONLINE",     Online},
     { NULL,     NULL}
 };
 
-
-
-Module_Info *__module_get_info() {
+/*
+ * 
+ */
+Module_Info *__module_get_info() 
+{
     return my_info;
 };
 
-Functions *__module_get_functions() {
+/*
+ * 
+ */
+Functions *__module_get_functions() 
+{
     return my_fn_list;
 };
 
-EventFnList *__module_get_events() {
+/*
+ * 
+ */
+EventFnList *__module_get_events() 
+{
     return my_event_list;
 };
 
-int __ModInit()
+/*
+ * 
+ */
+int __ModInit(int modnum, int apiver)
 {
     s_StupidServ = "StupidServ";
 	return 1;
 }
 
-
+/*
+ * 
+ */
 void __ModFini()
 {
 };
 
-
-/* Routine for VERSION */
+/*
+ * Routine for VERSION 
+ */
 static void s_version(User *u)
 {
 	SET_SEGV_LOCATION();
-        prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
-        prefmsg(u->nick, s_StupidServ, "%s Version: %s - running on: %s", s_StupidServ, my_info[0].module_version, me.name);
-        prefmsg(u->nick, s_StupidServ, "%s Author Fish <fish@neostats.net>", s_StupidServ);
-        prefmsg(u->nick, s_StupidServ, "Neostats Satistical Software: http://www.neostats.net");
+	prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
+	prefmsg(u->nick, s_StupidServ, "%s Version: %s - running on: %s", s_StupidServ, my_info[0].module_version, me.name);
+	prefmsg(u->nick, s_StupidServ, "%s Author Fish <fish@neostats.net>", s_StupidServ);
+	prefmsg(u->nick, s_StupidServ, "Neostats Satistical Software: http://www.neostats.net");
 }
 
-static void s_convert(User *u, char **cmd, int ac) {
+/*
+ * Routine for convert
+ */
+static void s_convert(User *u, char **cmd, int ac) 
+{
 	const gtf_filter_t *fp;
-        char *inbuf;
-        char outbuf[450];
+	char *inbuf;
+	char outbuf[450];
         
 	SET_SEGV_LOCATION();
 
@@ -174,9 +235,15 @@ static void s_convert(User *u, char **cmd, int ac) {
 	prefmsg(u->nick, s_StupidServ, "%s", outbuf);
 	free(inbuf);
 }
-static void s_list(User *u) {
+
+/*
+ * Routine for list
+ */
+static void s_list(User *u) 
+{
 	const gtf_filter_t *fp, *fp1;
 	int i;
+
 	prefmsg(u->nick, s_StupidServ, "There are %d available Languages", gtf_filter_count());
 	fp1 = gtf_filter_list();
 	for (i = 0, fp = fp1; i < gtf_filter_count(); i++, fp++) {
@@ -184,11 +251,15 @@ static void s_list(User *u) {
 	}
 	prefmsg(u->nick, s_StupidServ, "End of List.");
 }
-/* Routine for send */
-static void s_send(User *u, char **cmd, int ac) {
+
+/*
+ * Routine for send
+ */
+static void s_send(User *u, char **cmd, int ac) 
+{
 	const gtf_filter_t *fp;
-        char *inbuf;
-        char outbuf[450];
+	char *inbuf;
+	char outbuf[450];
         
 	SET_SEGV_LOCATION();
 
