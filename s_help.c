@@ -28,8 +28,6 @@
 const char s_help_send_oneline [] = "Convert and send text";
 const char s_help_convert_oneline [] = "Convert text and echo";
 const char s_help_list_oneline [] = "List languages available";
-const char s_help_about_oneline [] = "About StupidServ";
-const char s_help_version_oneline [] = "Display version info";
 
 const char *s_help_send[] = {
 	"Syntax: \2SEND <lang> <nick|channel> <text>\2",
@@ -53,14 +51,7 @@ const char *s_help_list[] = {
 	NULL
 };
 
-const char *s_help_version[] = {
-	"Syntax: \2VERSION\2",
-	"",
-	"StupidServ version information",
-	NULL
-};
-
-const char *s_help_about[] = {
+const char *s_about[] = {
 	"\2StupidServ\2 was created with the help of some software",
 	"called TalkFilters which is a collection of Translators",
 	"created by a wide range of authors.",

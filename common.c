@@ -21,7 +21,9 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdarg.h>
+#ifndef WIN32
 #include <unistd.h>
+#endif
 #include <stdio.h>
 
 #include "common.h"

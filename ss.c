@@ -1,5 +1,5 @@
 /* NeoStats - IRC Statistical Services Copyright (c) 1999-2004 NeoStats Group Inc.
-** Copyright (c) 1999-2004 Adam Rutter, Justin Hammond
+** Copyright (c) 1999-2004 Adam Rutter, Justin Hammond, Mark Hetherington
 ** http://www.neostats.net/
 **
 **  Portions Copyright (c) 2000-2001 ^Enigma^
@@ -24,16 +24,15 @@
 */
 
 #include <stdio.h>
+#ifndef WIN32
 #include "modconfig.h"
+#endif
 #include "neostats.h"
 #include "ss.h"
 #include "talkfilters.h"
 
-/*
- * StupidServ name
- */
-static char s_StupidServ[MAXNICK];
-static ModUser *ss_bot;
+/** Bot pointer */
+static Bot *ss_bot;
 
 struct ss_cfg { 
 	char user[MAXUSER];
@@ -44,59 +43,62 @@ struct ss_cfg {
 /*
  * Local declarations
  */
-static int s_send(User *u, char **av, int ac);
-static int s_convert(User *u, char **av, int ac);
-static int s_list(User *u, char **av, int ac);
-static int s_version(User *u, char **av, int ac);
-static int s_about(User *u, char **av, int ac);
+static int s_send (CmdParams* cmdparams);
+static int s_convert (CmdParams* cmdparams);
+static int s_list (CmdParams* cmdparams);
 
 static bot_cmd ss_commands[]=
 {
 	{"SEND",	s_send,		3, 	0,	s_help_send, 	s_help_send_oneline },
 	{"CONVERT", s_convert,	2, 	0,	s_help_convert,	s_help_convert_oneline },
 	{"LIST",	s_list,		0, 	0,	s_help_list, 	s_help_list_oneline },
-	{"VERSION", s_version,	0, 	0,	s_help_version,	s_help_version_oneline },
-	{"ABOUT",	s_about,	0, 	0,	s_help_about,	s_help_about_oneline },
 	{NULL,		NULL,		0, 	0,					NULL, 			NULL}
 };							
 
-static bot_setting ss_settings[]=
-{
-	{"NICK",	&s_StupidServ,	SET_TYPE_NICK,		0, MAXNICK, 	NS_ULEVEL_ADMIN, "Nick",	NULL,	ns_help_set_nick },
-	{"USER",	&ss_cfg.user,	SET_TYPE_USER,		0, MAXUSER, 	NS_ULEVEL_ADMIN, "User",	NULL,	ns_help_set_user },
-	{"HOST",	&ss_cfg.host,	SET_TYPE_HOST,		0, MAXHOST, 	NS_ULEVEL_ADMIN, "Host",	NULL,	ns_help_set_host },
-	{"REALNAME",&ss_cfg.realname,SET_TYPE_REALNAME,	0, MAXREALNAME, NS_ULEVEL_ADMIN, "RealName",NULL,	ns_help_set_realname },
-	{NULL,		NULL,			0,					0, 0, 	0,				 NULL,			NULL,	NULL	},
+/** Copyright info */
+const char *ss_copyright[] = {
+	"Copyright (c) 1999-2004, NeoStats",
+	"http://www.neostats.net/",
+	NULL
 };
 
-
-/*
- * Module info descriptor
- */
-ModuleInfo __module_info = {
-    "StupidServ",
-    "A Language Translator",
-    MODULE_VERSION,
+/** Module info */
+ModuleInfo module_info = {
+	"StupidServ",
+	"A Language Translator",
+	ss_copyright,
+	s_about,
+	NEOSTATS_VERSION,
+	"3,0",
 	__DATE__,
-	__TIME__
+	__TIME__,
+	0,
+	0,
+};
+
+/** BotInfo */
+static BotInfo ss_botinfo = 
+{
+	"StupidServ", 
+	"StupidServ1", 
+	"SS", 
+	BOT_COMMON_HOST, 
+	"A Language Translator", 	
+	BOT_FLAG_SERVICEBOT|BOT_FLAG_DEAF, 
+	ss_commands, 
+	NULL,
 };
 
 /*
  * Introduce the StupidServ bot onto the network
  */
-static int Online(char **av, int ac) 
+int ModSynch (void)
 {
-	ss_bot = init_mod_bot(s_StupidServ, ss_cfg.user, ss_cfg.host, ss_cfg.realname, 
-		services_bot_modes, BOT_FLAG_DEAF, ss_commands, ss_settings, __module_info.module_name);
-    return 1;
-};
-
-/*
- * IRC events that StupidServ responds to 
- */
-EventFnList __module_events[] = {
-    { EVENT_ONLINE,     Online},
-    { NULL,     NULL}
+	ss_bot = init_bot (&ss_botinfo);
+	if (!ss_bot) {
+		return NS_FAILURE;
+	}
+	return NS_SUCCESS;
 };
 
 /*
@@ -104,43 +106,7 @@ EventFnList __module_events[] = {
  */
 int __ModInit(int modnum, int apiver)
 {
- 	char *temp = NULL;
-
-#ifdef NS_ERR_VERSION /* Forward port version checks */
-	/* Check that our compiled version if compatible with the calling version of NeoStats */
-	if(	ircstrncasecmp (me.version, NEOSTATS_VERSION, VERSIONSIZE) !=0) {
-		return NS_ERR_VERSION;
-	}
-#endif 
-	if(GetConf((void *) &temp, CFGSTR, "Nick") < 0) {
-		strlcpy(s_StupidServ ,"StupidServ" ,MAXNICK);
-	}
-	else {
-		strlcpy(s_StupidServ , temp, MAXNICK);
-		free(temp);
-	}
-	if(GetConf((void *) &temp, CFGSTR, "User") < 0) {
-		strlcpy(ss_cfg.user, "SS", MAXUSER);
-	}
-	else {
-		strlcpy(ss_cfg.user, temp, MAXUSER);
-		free(temp);
-	}
-	if(GetConf((void *) &temp, CFGSTR, "Host") < 0) {
-		strlcpy(ss_cfg.host, me.name, MAXHOST);
-	}
-	else {
-		strlcpy(ss_cfg.host, temp, MAXHOST);
-		free(temp);
-	}
-	if(GetConf((void *) &temp, CFGSTR, "RealName") < 0) {
-		strlcpy(ss_cfg.realname, "A Language Translator", MAXREALNAME);
-	}
-	else {
-		strlcpy(ss_cfg.realname, temp, MAXREALNAME);
-		free(temp);
-	}
-	return 1;
+	return NS_SUCCESS;
 }
 
 /*
@@ -151,31 +117,9 @@ void __ModFini()
 };
 
 /*
- * Routine for VERSION 
- */
-static int s_version(User *u, char **av, int ac)
-{
-	SET_SEGV_LOCATION();
-	prefmsg(u->nick, s_StupidServ, "\2%s Version Information\2", s_StupidServ);
-	prefmsg(u->nick, s_StupidServ, "%s Version: %s Compiled %s at %s", s_StupidServ, 
-		__module_info.module_version, __module_info.module_build_date, __module_info.module_build_time);
-	prefmsg(u->nick, s_StupidServ, "%s Author Fish <fish@neostats.net>", s_StupidServ);
-	prefmsg(u->nick, s_StupidServ, "http://www.neostats.net");
-}
-
-/*
- * Routine for VERSION 
- */
-static int s_about(User *u, char **av, int ac)
-{
-	SET_SEGV_LOCATION();
-    privmsg_list(u->nick, s_StupidServ, s_help_about);
-}
-
-/*
  * Routine for convert
  */
-static int s_convert(User *u, char **av, int ac) 
+static int s_convert (CmdParams* cmdparams) 
 {
 	const gtf_filter_t *fp;
 	char *inbuf;
@@ -184,68 +128,71 @@ static int s_convert(User *u, char **av, int ac)
 	SET_SEGV_LOCATION();
 
 	/* now find the language they want */
-	fp = gtf_filter_lookup(av[2]);
+	fp = gtf_filter_lookup(cmdparams->av[0]);
 	if (!fp) {
-		prefmsg(u->nick, s_StupidServ, "Can not find that Language. /msg %s list for language list", s_StupidServ);
-		return;
+		irc_prefmsg (ss_bot, cmdparams->source, "Can not find that Language. /msg %s list for language list", ss_bot->name);
+		return NS_SUCCESS;
 	}
-	inbuf = joinbuf(av, ac, 3);
+	inbuf = joinbuf(cmdparams->av, cmdparams->ac, 1);
 	if (fp->filter(inbuf, outbuf, 450) > 0) {
-		prefmsg(u->nick, s_StupidServ, "Translated Text was too Long. Sending shortened text only");
+		irc_prefmsg (ss_bot, cmdparams->source, "Translated Text was too Long. Sending shortened text only");
 	}
-	prefmsg(u->nick, s_StupidServ, "%s", outbuf);
+	irc_prefmsg (ss_bot, cmdparams->source, "%s", outbuf);
 	free(inbuf);
+	return NS_SUCCESS;
 }
 
 /*
  * Routine for list
  */
-static int s_list(User *u, char **av, int ac) 
+static int s_list (CmdParams* cmdparams) 
 {
 	const gtf_filter_t *fp, *fp1;
 	int i;
 
-	prefmsg(u->nick, s_StupidServ, "There are %d available Languages", gtf_filter_count());
+	irc_prefmsg (ss_bot, cmdparams->source, "There are %d available Languages", gtf_filter_count());
 	fp1 = gtf_filter_list();
 	for (i = 0, fp = fp1; i < gtf_filter_count(); i++, fp++) {
-		prefmsg(u->nick, s_StupidServ, "Language: %s, Description: %s", fp->name, fp->desc);
+		irc_prefmsg (ss_bot, cmdparams->source, "Language: %s, Description: %s", fp->name, fp->desc);
 	}
-	prefmsg(u->nick, s_StupidServ, "End of List.");
+	irc_prefmsg (ss_bot, cmdparams->source, "End of List.");
+	return NS_SUCCESS;
 }
 
 /*
  * Routine for send
  */
-static int s_send(User *u, char **av, int ac) 
+static int s_send (CmdParams* cmdparams) 
 {
 	const gtf_filter_t *fp;
 	char *inbuf;
 	char outbuf[450];
         
 	SET_SEGV_LOCATION();
-	if (findchan(av[3])) {
-		if (UserLevel(u) < NS_ULEVEL_OPER) {
-		    prefmsg(u->nick, s_StupidServ, "Only Operators can send to channels.");
-		    return;
-	    	}
-        } else if (!finduser(av[3])) {
-            prefmsg(u->nick, s_StupidServ, "That user cannot be found on IRC. As a result, your message was not sent. Please check the spelling and try again!");
-            return;
-        }
-        /* The user has passed the minimum requirements for input */
+	if (find_chan(cmdparams->av[1])) {
+		if (UserLevel(cmdparams->source) < NS_ULEVEL_OPER) {
+		    irc_prefmsg (ss_bot, cmdparams->source, "Only Operators can send to channels.");
+	    	return NS_SUCCESS;
+    	}
+    } else if (!find_user(cmdparams->av[1])) {
+        irc_prefmsg (ss_bot, cmdparams->source, "That user cannot be found on IRC. As a result, your message was not sent. Please check the spelling and try again!");
+       	return NS_SUCCESS;
+    }
+    /* The user has passed the minimum requirements for input */
 
 	/* now find the language they want */
-	fp = gtf_filter_lookup(av[2]);
+	fp = gtf_filter_lookup(cmdparams->av[0]);
 	if (!fp) {
-		prefmsg(u->nick, s_StupidServ, "Can not find that Language. /msg %s list for language list", s_StupidServ);
-		return;
+		irc_prefmsg (ss_bot, cmdparams->source, "Can not find that Language. /msg %s list for language list", ss_bot->name);
+		return NS_SUCCESS;
 	}
-	inbuf = joinbuf(av, ac, 4);
+	inbuf = joinbuf(cmdparams->av, cmdparams->ac, 2);
 	if (fp->filter(inbuf, outbuf, 450) > 0) {
-		prefmsg(u->nick, s_StupidServ, "Translated Text was too Long. Sending shortened text only");
+		irc_prefmsg (ss_bot, cmdparams->source, "Translated Text was too Long. Sending shortened text only");
 	}
-	prefmsg(av[3], s_StupidServ, "%s is talking %s, and sent this:", u->nick, av[2]);
-	prefmsg(av[3], s_StupidServ, "%s", outbuf);
-	prefmsg(u->nick, s_StupidServ, "Your Message was sent to %s", av[3]);
+	irc_prefmsg (ss_bot, find_user(cmdparams->av[1]), "%s is talking %s, and sent this:", cmdparams->source->name, cmdparams->av[0]);
+	irc_prefmsg (ss_bot, find_user(cmdparams->av[1]), "%s", outbuf);
+	irc_prefmsg (ss_bot, cmdparams->source, "Your Message was sent to %s", cmdparams->av[1]);
 	free(inbuf);
+	return NS_SUCCESS;
 }
