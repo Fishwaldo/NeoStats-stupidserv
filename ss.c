@@ -227,6 +227,7 @@ static int s_send(User *u, char **av, int ac)
 	if (findchan(av[3])) {
 		if (UserLevel(u) < NS_ULEVEL_OPER) {
 		    prefmsg(u->nick, s_StupidServ, "Only Operators can send to channels.");
+		    return;
 	    	}
         } else if (!finduser(av[3])) {
             prefmsg(u->nick, s_StupidServ, "That user cannot be found on IRC. As a result, your message was not sent. Please check the spelling and try again!");
