@@ -14,7 +14,7 @@ TARGET= stupidserv.so
 DOCS=README.StupidServ
 DATA=
 DISTFILES = $(SRCS) $(DATA) $(DOCS) modconfig.h.in configure install-sh ChangeLog Makefile.in common.h talkfilters.h ss.h
-DISTDIR = @PACKAGE@-@VERSION@
+DISTDIR = @DISTDIRVERSION@
 
 
 all:	 module
