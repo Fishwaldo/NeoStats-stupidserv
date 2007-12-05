@@ -39,6 +39,7 @@ flex/warez.l -text
 /modconfig.h.in -text
 /pansy.c -text
 /postmodern.c -text
+/pulse.xml -text
 /redneck.c -text
 /s_help.c -text
 /ss.c -text
