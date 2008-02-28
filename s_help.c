@@ -25,11 +25,8 @@
 
 #include <stdio.h>
 
-const char s_help_send_oneline [] = "Convert and send text";
-const char s_help_convert_oneline [] = "Convert text and echo";
-const char s_help_list_oneline [] = "List languages available";
-
 const char *s_help_send[] = {
+	"Convert and send text",
 	"Syntax: \2SEND <lang> <nick|channel> <text>\2",
 	"",
 	"Converts the text to the selected language, and sends",
@@ -38,6 +35,7 @@ const char *s_help_send[] = {
 };
 
 const char *s_help_convert[] = {
+	"Convert text and echo",
 	"Syntax: \2CONVERT <lang> <text>\2",
 	"",
 	"Converts the text to the selected and echo's it back to you",
@@ -45,6 +43,7 @@ const char *s_help_convert[] = {
 };
 
 const char *s_help_list[] = {
+	"List languages available",
 	"Syntax: \2LIST\2",
 	"",
 	"Lists all available Languages",

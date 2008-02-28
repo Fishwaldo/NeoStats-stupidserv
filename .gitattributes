@@ -3,9 +3,12 @@
 /COPYING -text
 /ChangeLog -text
 /LICENSE -text
+/Makefile.am -text
 /Makefile.in -text
 /NEWS -text
 /README.StupidServ -text
+/RELNOTES -text
+/aclocal.m4 -text
 /b1ff.c -text
 /brooklyn.c -text
 /chef.c -text

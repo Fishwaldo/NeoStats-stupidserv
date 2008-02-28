@@ -23,9 +23,6 @@
 ** $Id$
 */
 
-extern const char s_help_send_oneline[];
-extern const char s_help_convert_oneline[];
-extern const char s_help_list_oneline[];
 extern const char *s_help_send[];
 extern const char *s_help_convert[];
 extern const char *s_help_list[];

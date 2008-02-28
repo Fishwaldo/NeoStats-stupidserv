@@ -43,16 +43,16 @@ struct ss_cfg {
 /*
  * Local declarations
  */
-static int s_send (CmdParams* cmdparams);
-static int s_convert (CmdParams* cmdparams);
-static int s_list (CmdParams* cmdparams);
+static int s_send (const CmdParams* cmdparams);
+static int s_convert (const CmdParams* cmdparams);
+static int s_list (const CmdParams* cmdparams);
 
 static bot_cmd ss_commands[]=
 {
-	{"SEND",	s_send,		3, 	0,	s_help_send, 	s_help_send_oneline },
-	{"CONVERT", s_convert,	2, 	0,	s_help_convert,	s_help_convert_oneline },
-	{"LIST",	s_list,		0, 	0,	s_help_list, 	s_help_list_oneline },
-	{NULL,		NULL,		0, 	0,					NULL, 			NULL}
+	{"SEND",	s_send,		3, 	0,	s_help_send 	},
+	{"CONVERT", 	s_convert,	2, 	0,	s_help_convert	},
+	{"LIST",	s_list,		0, 	0,	s_help_list 	},
+	NS_CMD_END()
 };							
 
 /** Copyright info */
@@ -120,7 +120,7 @@ int ModFini( void )
 /*
  * Routine for convert
  */
-static int s_convert (CmdParams* cmdparams) 
+static int s_convert (const CmdParams* cmdparams) 
 {
 	const gtf_filter_t *fp;
 	char *inbuf;
@@ -146,7 +146,7 @@ static int s_convert (CmdParams* cmdparams)
 /*
  * Routine for list
  */
-static int s_list (CmdParams* cmdparams) 
+static int s_list (const CmdParams* cmdparams) 
 {
 	const gtf_filter_t *fp, *fp1;
 	int i;
@@ -163,7 +163,7 @@ static int s_list (CmdParams* cmdparams)
 /*
  * Routine for send
  */
-static int s_send (CmdParams* cmdparams) 
+static int s_send (const CmdParams* cmdparams) 
 {
 	const gtf_filter_t *fp;
 	char *inbuf;
