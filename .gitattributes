@@ -6,7 +6,6 @@
 /Makefile.am -text
 /Makefile.in -text
 /NEWS -text
-/README.StupidServ -text
 /RELNOTES -text
 /RELNOTES.win32.txt -text
 /aclocal.m4 -text

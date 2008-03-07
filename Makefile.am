@@ -12,7 +12,5 @@ stupidserv_la_LDFLAGS	= -module -avoid-version -noundefined
 
 EXTRA_DIST		= autotools/ccdv.c autotools/shtool RELNOTES
 
-dist_doc_DATA		= README.StupidServ
-
 
 include $(top_srcdir)/autotools/rules.mk

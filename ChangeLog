@@ -1,6 +1,7 @@
 StupidServ Module for NeoStats Changelog.
 ==============================================================================
-3.0.a4 - Fish
+3.0.0 - Fish
+ - Win32 build files and minor fixes (F)
  - Upgrade to TalkFilters 2.3.8 which adds a few new translations (F)
  - StupidServ had more leaks than a swimming pool after a atomic bomb. Fixed (F)
 
