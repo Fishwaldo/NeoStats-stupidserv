@@ -82,8 +82,10 @@ extern int gtf_strbuf_putc(gtf_databuf_t *buf, char c);
   fputs((S), stdout)
 #endif /* LIBRARY_MODE */
 
+#if 0
 #define gtf_unput_last() \
   unput(*(yytext + yyleng - 1))
+#endif
 
 #define gtf_match_case(X, Y) \
   isupper(X) ? toupper(Y) : tolower(Y)
