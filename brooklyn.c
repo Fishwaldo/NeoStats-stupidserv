@@ -2311,7 +2311,7 @@ int gtf_filter_brooklyn(const char *input, char *buf, size_t bufsz)
   _yybuf = brooklyn_yy_scan_string(input);
   brooklyn_yylex(&buffer);
   brooklyn_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  brooklyn_yylex_destroy();
 
   return(buffer.overflow);
   }

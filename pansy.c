@@ -1984,7 +1984,7 @@ int gtf_filter_pansy(const char *input, char *buf, size_t bufsz)
   _yybuf = pansy_yy_scan_string(input);
   pansy_yylex(&buffer);
   pansy_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  pansy_yylex_destroy();
 
   return(buffer.overflow);
   }

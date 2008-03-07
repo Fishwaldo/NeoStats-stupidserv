@@ -96,8 +96,6 @@ extern int gtf_strbuf_putc(gtf_databuf_t *buf, char c);
 #define gtf_echo() \
   gtf_puts(yytext)
 
-#define gtf_reset() \
-  { yyrestart(NULL); BEGIN(0); }
 
 extern void gtf_random_seed(void);
 

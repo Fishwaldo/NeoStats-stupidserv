@@ -6181,7 +6181,7 @@ int gtf_filter_drawl(const char *input, char *buf, size_t bufsz)
   _yybuf = drawl_yy_scan_string(input);
   drawl_yylex(&buffer);
   drawl_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  drawl_yylex_destroy();
 
   return(buffer.overflow);
   }

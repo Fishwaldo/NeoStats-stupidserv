@@ -78,7 +78,7 @@ int gtf_filter_fudd(const char *input, char *buf, size_t bufsz)
   _yybuf = yy_scan_string(input);
   yylex(&buffer);
   yy_delete_buffer(_yybuf);
-  gtf_reset();
+  fudd_yylex_destroy();
 
   return(buffer.overflow);
   }

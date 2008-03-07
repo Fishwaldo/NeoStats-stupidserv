@@ -2487,7 +2487,7 @@ int gtf_filter_b1ff(const char *input, char *buf, size_t bufsz)
   _yybuf = b1ff_yy_scan_string(input);
   b1ff_yylex(&buffer);
   b1ff_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  b1ff_yylex_destroy();
 
   return(buffer.overflow);
   }

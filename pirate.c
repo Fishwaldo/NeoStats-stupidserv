@@ -3092,8 +3092,8 @@ int gtf_filter_pirate(const char *input, char *buf, size_t bufsz)
   _yybuf = pirate_yy_scan_string(input);
   pirate_yylex(&buffer);
   pirate_yy_delete_buffer(_yybuf);
-  gtf_reset();
-
+  pirate_yylex_destroy();
+  
   return(buffer.overflow);
   }
 

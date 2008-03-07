@@ -2209,7 +2209,7 @@ int gtf_filter_warez(const char *input, char *buf, size_t bufsz)
   _yybuf = warez_yy_scan_string(input);
   warez_yylex(&buffer);
   warez_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  warez_yylex_destroy();
 
   return(buffer.overflow);
   }

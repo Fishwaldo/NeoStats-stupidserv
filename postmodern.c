@@ -2370,7 +2370,7 @@ int gtf_filter_postmodern(const char *input, char *buf, size_t bufsz)
   _yybuf = postmodern_yy_scan_string(input);
   postmodern_yylex(&buffer);
   postmodern_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  postmodern_yylex_destroy();
 
   return(buffer.overflow);
   }

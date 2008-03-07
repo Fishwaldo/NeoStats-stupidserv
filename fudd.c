@@ -1813,7 +1813,7 @@ int gtf_filter_fudd(const char *input, char *buf, size_t bufsz)
   _yybuf = fudd_yy_scan_string(input);
   fudd_yylex(&buffer);
   fudd_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  fudd_yylex_destroy();
 
   return(buffer.overflow);
   }

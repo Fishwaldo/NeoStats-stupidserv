@@ -5525,7 +5525,7 @@ int gtf_filter_redneck(const char *input, char *buf, size_t bufsz)
   _yybuf = redneck_yy_scan_string(input);
   redneck_yylex(&buffer);
   redneck_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  redneck_yylex_destroy();
 
   return(buffer.overflow);
   }

@@ -2145,7 +2145,7 @@ int gtf_filter_kraut(const char *input, char *buf, size_t bufsz)
   _yybuf = kraut_yy_scan_string(input);
   kraut_yylex(&buffer);
   kraut_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  kraut_yylex_destroy();
 
   return(buffer.overflow);
   }

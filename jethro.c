@@ -4145,7 +4145,8 @@ int gtf_filter_jethro(const char *input, char *buf, size_t bufsz)
   _yybuf = jethro_yy_scan_string(input);
   jethro_yylex(&buffer);
   jethro_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  jethro_yylex_destroy();
+  
 
   return(buffer.overflow);
   }

@@ -2748,7 +2748,7 @@ int gtf_filter_dubya(const char *input, char *buf, size_t bufsz)
   _yybuf = dubya_yy_scan_string(input);
   dubya_yylex(&buffer);
   dubya_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  dubya_yylex_destroy();
 
   return(buffer.overflow);
   }

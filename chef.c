@@ -1982,7 +1982,7 @@ int gtf_filter_chef(const char *input, char *buf, size_t bufsz)
   _yybuf = chef_yy_scan_string(input);
   chef_yylex(&buffer);
   chef_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  chef_yylex_destroy();
 
   return(buffer.overflow);
   }

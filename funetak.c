@@ -3166,7 +3166,7 @@ int gtf_filter_funetak(const char *input, char *buf, size_t bufsz)
   _yybuf = funetak_yy_scan_string(input);
   funetak_yylex(&buffer);
   funetak_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  funetak_yylex_destroy();
 
   return(buffer.overflow);
   }

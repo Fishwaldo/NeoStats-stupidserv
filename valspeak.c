@@ -2536,7 +2536,7 @@ int gtf_filter_valspeak(const char *input, char *buf, size_t bufsz)
   _yybuf = valspeak_yy_scan_string(input);
   valspeak_yylex(&buffer);
   valspeak_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  valspeak_yylex_destroy();
 
   return(buffer.overflow);
   }

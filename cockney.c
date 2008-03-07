@@ -4723,7 +4723,7 @@ int gtf_filter_cockney(const char *input, char *buf, size_t bufsz)
   _yybuf = cockney_yy_scan_string(input);
   cockney_yylex(&buffer);
   cockney_yy_delete_buffer(_yybuf);
-  gtf_reset();
+  cockney_yylex_destroy();
 
   return(buffer.overflow);
   }
