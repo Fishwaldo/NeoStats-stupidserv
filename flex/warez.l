@@ -44,7 +44,7 @@
 %option prefix="warez_yy"
 %option outfile="lex.yy.c"
 %option noyywrap
-%option nounput
+%option nounput 
 
 %e 2000
 %p 5000
@@ -60,6 +60,7 @@ EOT	\4
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -67,7 +68,7 @@ static const char *a_array[] = {"4", "4", "4", "a", "a", "A", "@"};
 #define A_LEN (sizeof(a_array) / sizeof(a_array[0]))
 static const char *b_array[] = {"8", "b", "b", "B"};
 #define B_LEN (sizeof(b_array) / sizeof(b_array[0]))
-static const char *c_array[] = {"c", "c", "C", "k", "k", "<"};
+static const char *c_array[] = {"c", "c", "C", "k", "k" /*, "<" */};
 #define C_LEN (sizeof(c_array) / sizeof(c_array[0]))
 static const char *d_array[] = {"d", "d", "D", "|)"};
 #define D_LEN (sizeof(d_array) / sizeof(d_array[0]))
@@ -83,7 +84,7 @@ static const char *i_array[] = {"1", "i", "I", "!", "Y", "|"};
 #define I_LEN (sizeof(i_array) / sizeof(i_array[0]))
 static const char *j_array[] = {"j", "j", "J", ";"};
 #define J_LEN (sizeof(j_array) / sizeof(j_array[0]))
-static const char *k_array[] = {"k", "k", "K", "|<", "c", "C"};
+static const char *k_array[] = {"k", "K", "c", "C"};
 #define K_LEN (sizeof(k_array) / sizeof(k_array[0]))
 static const char *l_array[] = {"1", "l", "l", "L"};
 #define L_LEN (sizeof(l_array) / sizeof(l_array[0]))
@@ -109,7 +110,7 @@ static const char *v_array[] = {"v", "v", "V", "\\/"};
 #define V_LEN (sizeof(v_array) / sizeof(v_array[0]))
 static const char *w_array[] = {"w", "w", "W", "W", "\\/\\/"};
 #define W_LEN (sizeof(w_array) / sizeof(w_array[0]))
-static const char *x_array[] = {"x", "X", "><", "kz" };
+static const char *x_array[] = {"x", "X", /*"><",*/ "kz" };
 #define X_LEN (sizeof(x_array) / sizeof(x_array[0]))
 static const char *y_array[] = {"y", "Y"};
 #define Y_LEN (sizeof(y_array) / sizeof(y_array[0]))
@@ -125,6 +126,8 @@ static const char *__warez_rand(const char **array, int length)
 %}
 
 %%
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 [aA]		gtf_puts(__warez_rand(a_array, A_LEN));
 [bB]		gtf_puts(__warez_rand(b_array, B_LEN));
@@ -167,7 +170,8 @@ Are		gtf_puts("R");
 [Ee]xperienced	gtf_puts("1337");
 [Yy]our		gtf_puts_case("j00r");
 [Hh]acker	|
-[Pp]rogrammer	gtf_puts_case("h4x0r");
+[Pp]rogrammer	|
+[Dd]eveloper    gtf_puts_case("h4x0r");
 [Ee]lite	gtf_puts("31337");
 [Pp]ornography	gtf_puts_case("pr0n");
 [Pp]orn(o)?	gtf_puts_case("pr0n");
@@ -184,6 +188,7 @@ Are		gtf_puts("R");
 [Bb]roke(n)?	|
 [Mm]alfunctioning |
 [Bb]uggy	gtf_puts_case("fux0red");
+[Ss]uckers      gtf_puts_case("sux0rz");
 
 {EOT}		/* ignore trailing EOT character */
 .		gtf_echo();
@@ -206,6 +211,11 @@ int gtf_filter_warez(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_warez(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_warez(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

@@ -23,7 +23,23 @@
 
 #include <sys/types.h>
 
-/* filter lookup interface */
+// DLL kludges
+
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#if defined(TALKFILTERS_EXPORTS)
+#define TALKFILTERS_API __declspec(dllexport)
+#else // ! TALKFILTERS_EXPORTS
+#define TALKFILTERS_API __declspec(dllimport)
+#endif // TALKFILTERS_EXPORTS
+#else // ! WIN32
+#define TALKFILTERS_API
+#endif // WIN32
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// filter lookup interface
 
 typedef struct
   {
@@ -32,42 +48,70 @@ typedef struct
   int (*filter)(const char *, char *, size_t);
   } gtf_filter_t;
 
-extern int gtf_filter_count(void);
+extern TALKFILTERS_API int gtf_filter_count(void);
 
-extern const gtf_filter_t *gtf_filter_list(void);
+extern TALKFILTERS_API const gtf_filter_t *gtf_filter_list(void);
 
-extern const gtf_filter_t *gtf_filter_lookup(const char *name);
+extern TALKFILTERS_API const gtf_filter_t *gtf_filter_lookup(const char *name);
 
-/* individual filters */
+// individual filters
 
-extern int gtf_filter_b1ff(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_austro(const char *input, char *buf,
+                                             size_t bufsz);
 
-extern int gtf_filter_brooklyn(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_b1ff(const char *input, char *buf,
+                                           size_t bufsz);
 
-extern int gtf_filter_chef(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_brooklyn(const char *input, char *buf,
+                                               size_t bufsz);
 
-extern int gtf_filter_cockney(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_chef(const char *input, char *buf,
+                                           size_t bufsz);
 
-extern int gtf_filter_drawl(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_cockney(const char *input, char *buf,
+                                              size_t bufsz);
 
-extern int gtf_filter_fudd(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_drawl(const char *input, char *buf,
+                                            size_t bufsz);
 
-extern int gtf_filter_funetak(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_dubya(const char *input, char *buf,
+                                            size_t bufsz);
 
-extern int gtf_filter_jethro(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_fudd(const char *input, char *buf,
+                                           size_t bufsz);
 
-extern int gtf_filter_jive(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_funetak(const char *input, char *buf,
+                                              size_t bufsz);
 
-extern int gtf_filter_kraut(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_jethro(const char *input, char *buf,
+                                             size_t bufsz);
 
-extern int gtf_filter_pansy(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_jive(const char *input, char *buf,
+                                           size_t bufsz);
 
-extern int gtf_filter_postmodern(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_kraut(const char *input, char *buf,
+                                            size_t bufsz);
 
-extern int gtf_filter_redneck(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_pansy(const char *input, char *buf,
+                                            size_t bufsz);
 
-extern int gtf_filter_valspeak(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_pirate(const char *input, char *buf,
+                                             size_t bufsz);
 
-extern int gtf_filter_warez(const char *input, char *buf, size_t bufsz);
+extern TALKFILTERS_API int gtf_filter_postmodern(const char *input, char *buf,
+                                                 size_t bufsz);
 
+extern TALKFILTERS_API int gtf_filter_redneck(const char *input, char *buf,
+                                              size_t bufsz);
+
+extern TALKFILTERS_API int gtf_filter_valspeak(const char *input, char *buf,
+                                               size_t bufsz);
+
+extern TALKFILTERS_API int gtf_filter_warez(const char *input, char *buf,
+                                            size_t bufsz);
+
+#ifdef __cplusplus
+};
+#endif
+  
 #endif /* __gnu_talkfilters_h */

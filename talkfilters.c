@@ -18,34 +18,83 @@
    Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#include "modconfig.h"
+#endif
 
 #include <stddef.h>
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
 
 #include "talkfilters.h"
 
-static const char *__gtf_version = "GNU Talkfilters v2.0";
+#ifdef WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
+#ifdef _MSC_VER
+#pragma warning (disable: 4996)
+#define strcasecmp stricmp
+#endif
+
+static const char *__gtf_version = "GNU Talkfilters v2.3.7";
+
+extern int __gtf_filter_austro(const char *, char *, size_t);
+extern int __gtf_filter_b1ff(const char *, char *, size_t);
+extern int __gtf_filter_brooklyn(const char *, char *, size_t);
+extern int __gtf_filter_chef(const char *, char *, size_t);
+extern int __gtf_filter_cockney(const char *, char *, size_t);
+extern int __gtf_filter_drawl(const char *, char *, size_t);
+extern int __gtf_filter_dubya(const char *, char *, size_t);
+extern int __gtf_filter_fudd(const char *, char *, size_t);
+extern int __gtf_filter_funetak(const char *, char *, size_t);
+extern int __gtf_filter_jethro(const char *, char *, size_t);
+extern int __gtf_filter_jive(const char *, char *, size_t);
+extern int __gtf_filter_kraut(const char *, char *, size_t);
+extern int __gtf_filter_pansy(const char *, char *, size_t);
+extern int __gtf_filter_pirate(const char *, char *, size_t);
+extern int __gtf_filter_postmodern(const char *, char *, size_t);
+extern int __gtf_filter_redneck(const char *, char *, size_t);
+extern int __gtf_filter_valspeak(const char *, char *, size_t);
+extern int __gtf_filter_warez(const char *, char *, size_t);
 
 static gtf_filter_t __gtf_filters[] =
 {
-  { "b1ff",       "B1FF",           gtf_filter_b1ff       },
-  { "brooklyn",   "Brooklyn",       gtf_filter_brooklyn   },
-  { "chef",       "Swedish Chef",   gtf_filter_chef       },
-  { "cockney",    "London Cockney", gtf_filter_cockney    },
-  { "drawl",      "Southern Drawl", gtf_filter_drawl      },
-  { "fudd",       "Elmer Fudd",     gtf_filter_fudd       },
-  { "funetak",    "Funetak",        gtf_filter_funetak    },
-  { "jethro",     "Jethro",         gtf_filter_jethro     },
-  { "jive",       "Jive",           gtf_filter_jive       },
-  { "kraut",      "Kraut",          gtf_filter_kraut      },
-  { "pansy",      "Pansy",          gtf_filter_pansy      },
-  { "postmodern", "Postmodernist",  gtf_filter_postmodern },
-  { "redneck",    "Redneck",        gtf_filter_redneck    },
-  { "valspeak",   "Valley Speak",   gtf_filter_valspeak   },
-  { "warez",      "Warez (H4x0r)",  gtf_filter_warez      },
+  { "austro",     "Austro",         __gtf_filter_austro     },
+  { "b1ff",       "B1FF",           __gtf_filter_b1ff       },
+  { "brooklyn",   "Brooklyn",       __gtf_filter_brooklyn   },
+  { "chef",       "Swedish Chef",   __gtf_filter_chef       },
+  { "cockney",    "London Cockney", __gtf_filter_cockney    },
+  { "drawl",      "Southern Drawl", __gtf_filter_drawl      },
+  { "dubya",      "George Dubya",   __gtf_filter_dubya      },
+  { "fudd",       "Elmer Fudd",     __gtf_filter_fudd       },
+  { "funetak",    "Funetak",        __gtf_filter_funetak    },
+  { "jethro",     "Jethro",         __gtf_filter_jethro     },
+  { "jive",       "Jive",           __gtf_filter_jive       },
+  { "kraut",      "Kraut",          __gtf_filter_kraut      },
+  { "pansy",      "Pansy",          __gtf_filter_pansy      },
+  { "pirate",     "Pirate",         __gtf_filter_pirate     },
+  { "postmodern", "Postmodernist",  __gtf_filter_postmodern },
+  { "redneck",    "Redneck",        __gtf_filter_redneck    },
+  { "valspeak",   "Valley Speak",   __gtf_filter_valspeak   },
+  { "warez",      "Warez (H4x0r)",  __gtf_filter_warez      },
 };
 
 static int __gtf_filter_count = sizeof(__gtf_filters) / sizeof(gtf_filter_t);
+
+/*
+ */
+
+#ifdef WIN32
+
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+{
+  return(TRUE);
+}
+
+#endif
 
 /*
  */

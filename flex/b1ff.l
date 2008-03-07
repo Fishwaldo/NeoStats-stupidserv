@@ -86,6 +86,7 @@ modified and improved by David Whitten
 %option prefix="b1ff_yy"
 %option outfile="lex.yy.c"
 %option noyywrap
+%option nounput
 
 %e 3000
 %p 6000
@@ -97,6 +98,7 @@ modified and improved by David Whitten
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -111,7 +113,9 @@ EOT  \4
 %s INW NIW
  
 %%
- 
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
+
 \\[^ \n]+	  gtf_echo(); 
 {NW}		  BEGIN NIW; gtf_echo();
 "..."             { BEGIN NIW; gtf_printf(gtf_random(2) ? "...C00L HUH!?! "
@@ -120,7 +124,7 @@ EOT  \4
 ".\""             BEGIN NIW; gtf_printf(gtf_random(2) ? "!!!\"" : "!1!!\"" );
 "!"$              BEGIN NIW; gtf_printf("!!!!!!!!!!1");
 "!"+/{NW}         BEGIN NIW; gtf_printf("!1!");
-"?"/{NW}          BEGIN NIW; gtf_printf("??!!");
+"?"/{NW}          BEGIN NIW; gtf_printf("\?\?!!");
 ":)"              BEGIN NIW; gtf_printf(";-)!!! ");
 "8)"              BEGIN NIW; gtf_printf(";-)!!! ");
 ":*)"             BEGIN NIW; gtf_printf(";-)!!!!  ");
@@ -218,6 +222,11 @@ int gtf_filter_b1ff(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_b1ff(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_b1ff(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

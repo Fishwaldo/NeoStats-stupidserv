@@ -24,7 +24,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <string.h>
+
+#if (defined WIN32) && !(defined __MINGW32__)
+#define fileno _fileno
+#define strcasecmp stricmp
+#endif
+
+#include "modconfig.h"
 
 typedef struct
   {
@@ -63,8 +69,8 @@ extern int gtf_strbuf_puts(gtf_databuf_t *buf, const char *s);
 extern int gtf_strbuf_putc(gtf_databuf_t *buf, char c);
 
 #ifdef LIBRARY_MODE
-#define gtf_printf(args...) \
-  gtf_strbuf_vprintf(buf, ## args)
+#define gtf_printf(...) \
+  gtf_strbuf_vprintf(buf, __VA_ARGS__)
 #define gtf_putc(S) \
   gtf_strbuf_putc(buf, (S))
 #define gtf_puts(S) \
@@ -104,6 +110,6 @@ Options:\n\
 This program is a filter; it reads data from standard input, processes it,\n\
 and writes the results to standard output.\n"
 
-#define GTF_VERSION "GNU Talk Filters v2.0"
+#define GTF_VERSION "GNU Talk Filters v" VERSION
 
 #endif /* __gtf_common_h */

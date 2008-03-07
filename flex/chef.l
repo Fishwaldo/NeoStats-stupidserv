@@ -33,10 +33,12 @@
 %option prefix="chef_yy"
 %option outfile="lex.yy.c"
 %option noyywrap
+%option nounput
 
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -51,6 +53,8 @@ EOT	\4
 %s INW NIW
 
 %%
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 \\[^ \n\4]+	gtf_echo();
 
@@ -110,6 +114,11 @@ int gtf_filter_chef(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_chef(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_chef(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

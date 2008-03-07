@@ -35,6 +35,7 @@
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -50,6 +51,8 @@ EOT	\4
 %%
 
 <NIW,INITIAL>{
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 [Gg]et{WB}your/{NW}	gtf_puts_case("gitcher");
 [Gg]et{WB}you/{NW}	gtf_puts_case("gitcha");
@@ -395,6 +398,11 @@ int gtf_filter_redneck(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_redneck(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_redneck(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

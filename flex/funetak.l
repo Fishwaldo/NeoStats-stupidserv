@@ -23,6 +23,7 @@
 %option prefix="funetak_yy"
 %option outfile="lex.yy.c"
 %option noyywrap
+%option nounput
 
 %e 2000
 %p 6000
@@ -34,6 +35,7 @@
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -49,6 +51,8 @@ EOT	\4
 %%
 
 <NIW,INITIAL>{
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 [Aa]nybody/{NW}		gtf_puts_case("uni boodi");
 [Aa]re/{NW}		gtf_puts_case("ure");
@@ -120,7 +124,7 @@ EOT	\4
 [Dd]ay			gtf_puts_case("di"); BEGIN(INW);
 [Dd]id			gtf_puts_case("ded"); BEGIN(INW);
 [Dd]o			gtf_puts_case("dew"); BEGIN(INW);
-[Dd]oes			{ if (random()%3) gtf_puts_case("dus");
+[Dd]oes			{ if (gtf_random(3)) gtf_puts_case("dus");
 			  else gtf_puts_case("duz");
 			  BEGIN(INW); }
 [Dd]ude/{NW}		gtf_puts_case("do ed");
@@ -199,7 +203,7 @@ EOT	\4
 			    gtf_puts_case("dis");
 			  else if(gtf_random(3) == 0)
 			    gtf_puts_case("dus");
-			  else gtf_puts("duz");
+			  else gtf_puts_case("duz");
 			}
 [Tt]ime			gtf_puts_case("tym"); BEGIN(INW);
 [Tt]o			gtf_puts_case("two"); BEGIN(INW);
@@ -254,6 +258,11 @@ int gtf_filter_funetak(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_funetak(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_funetak(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

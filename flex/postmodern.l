@@ -27,6 +27,7 @@ various humanities type classes
 %option prefix="postmodern_yy"
 %option outfile="lex.yy.c"
 %option noyywrap
+%option nounput
 
 %a 3000
 %e 3000
@@ -36,6 +37,7 @@ various humanities type classes
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -47,6 +49,8 @@ NW	[^A-Za-z'0-9]
 EOT	\4
 
 %%
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 [Ww]e/{NW}	 gtf_puts_case("the dysfunctional group");
 [Tt]hing/{NW}	 gtf_puts_case("phallic-symbol-like weapon");
@@ -120,6 +124,11 @@ int gtf_filter_postmodern(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_postmodern(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_postmodern(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

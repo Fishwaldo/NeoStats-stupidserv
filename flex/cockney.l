@@ -50,6 +50,7 @@
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -65,6 +66,8 @@ EOT	\4
 %%
 
 <NIW,INITIAL>{
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 [Tt]alk/{NW}		gtf_puts_case("go on");
 [Tt]alked/{NW}		gtf_puts_case("went on");
@@ -528,6 +531,11 @@ int gtf_filter_cockney(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_cockney(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_cockney(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

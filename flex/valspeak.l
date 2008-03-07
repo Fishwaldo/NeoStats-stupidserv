@@ -25,6 +25,7 @@
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -40,6 +41,8 @@ EOT	\4
 %%
 
 <NIW,INITIAL>{
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 [Bb]ad			gtf_puts_case("mean"); BEGIN(INW);
 [Bb]ig/{NW}		gtf_puts_case("bitchin'est");
@@ -193,6 +196,11 @@ int gtf_filter_valspeak(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_valspeak(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_valspeak(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

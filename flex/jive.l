@@ -32,6 +32,7 @@
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -47,6 +48,8 @@ EOT	\4
 %%
 
 <NIW,INITIAL>{
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 [Ff]iles/{NW}		gtf_puts_case("stashes");
 [Ff]ile/{NW}		gtf_puts_case("stash");
@@ -84,7 +87,7 @@ modem/{NW}		gtf_puts_case("doodad");
 [Mm]an/{NW}		gtf_puts_case("dude");
 [Ww]oman/{NW}		gtf_puts_case("mama");
 ([Mm]o(m|ther))/{NW} 	gtf_puts_case("mama");
-([Dd]ad|[Ff]ather)/{NW}	gtf_puts_case("daddy");
+([Dd]ad|[Ff]ather)/{NW}	gtf_puts_case("big daddy");
 [Gg]irl/{NW}		gtf_puts_case("goat");
 [Ss]omething/{NW}	gtf_puts_case("sump'n");
 (lie|[Ll]ies)/{NW}	gtf_puts_case("honky jibe");
@@ -111,7 +114,7 @@ Are{WB}you/{NW}		gtf_puts_case("Is you");
 [Oo]ther		gtf_puts_case("oda'"); BEGIN(INW);
 [Ss]hoe/{NW}		gtf_puts_case("kicker");
 [Hh]ave{WB}to/{NW}	gtf_puts_case("gots'ta");
-have/{NW}		gtf_puts_case("gots'");
+have/{NW}		gtf_puts_case("gots");
 has|(have{WB}to)/{NW}	gtf_puts_case("gots'ta");
 [Cc]ome{WB}over/{NW}	gtf_puts_case("mosey on down");
 [Gg]o{WB}down/{NW}	gtf_puts_case("mosey on down");
@@ -252,7 +255,9 @@ I{WB}told{WB}her/{NW}	gtf_puts_case("Ah sez to her");
 I{WB}told{WB}him/{NW}	gtf_puts_case("Ah sez to him");
 [Ii]/{NW}		gtf_puts_case("Ah'");
 [Tt]alking/{NW}		gtf_puts_case("rappin'");
+[Tt]elephone/{NW}       gtf_puts_case("rap rod");
 [Tt]alk			gtf_puts_case("rap"); BEGIN(INW);
+[Hh]ello/{NW}           gtf_puts_case("sappnin'");
 John{WB}Lennon/{NW}	gtf_puts_case("L L Cool J");
 The{WB}Beatles/{NW}	gtf_puts_case("Boyz II Men");
 kick{WB}your{WB}ass/{NW} gtf_puts_case("get evil on yo' ass");
@@ -261,6 +266,9 @@ kick{WB}your{WB}ass/{NW} gtf_puts_case("get evil on yo' ass");
 basketball/{NW}		gtf_puts_case("hoop");
 bastard			gtf_puts_case("bast'id"); BEGIN(INW);
 football/{NW}		gtf_puts_case("ball");
+[Hh]e's/{NW}            gtf_puts_case("he be");
+[Ss]he's/{NW}           gtf_puts_case("she be");
+[Tt]hey're/{NW}         gtf_puts_case("dey be");
 [Ff]riend/{NW}		gtf_puts_case("homey");
 [Ss]chool/{NW}		gtf_puts_case("farm");
 (swing|boing|.[ltr]?ing)/{NW} gtf_puts_case(yytext);
@@ -280,6 +288,7 @@ Well,		        gtf_puts_case("Sheeit...");
 [Tt]hink/{NW}		gtf_puts_case(yytext);
 [Tt]h			gtf_puts_case("d"); BEGIN(INW);
 
+
 {WC}			{ BEGIN(INW); gtf_echo(); }
 
 }
@@ -293,8 +302,9 @@ Well,		        gtf_puts_case("Sheeit...");
 			    gtf_printf("%s check it:", yytext);
 			  BEGIN(NIW); }
 [a-b]"."		gtf_printf("%s Sheeeiit.", yytext); BEGIN(NIW);
-[c-d]"."		gtf_printf("%s  Word!", yytext); BEGIN(INW);
+[c-d]"."		gtf_printf("%s Word!", yytext); BEGIN(INW);
 [e-f]"."		gtf_printf("%s What it is, Mama!", yytext); BEGIN(NIW);
+[g-h]"."                gtf_printf("%s Lop some boogie.", yytext); BEGIN(NIW);
 [i-j]"."		gtf_printf("%s Ya' know?", yytext); BEGIN(NIW);
 [m-n]"."		gtf_printf("%s 'S coo', bro.", yytext); BEGIN(NIW);
 [o-p]"."		{ gtf_printf( "%s Jes hang loose, brotha'.", yytext);
@@ -343,6 +353,11 @@ int gtf_filter_jive(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_jive(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_jive(input, buf, bufsz));
+}
 
 #else
 

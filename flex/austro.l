@@ -18,21 +18,21 @@
    Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-%option prefix="pansy_yy"
+%option prefix="austro_yy"
 %option outfile="lex.yy.c"
 %option noyywrap
-%option nounput
+%option nounput 
 
 %e 2000
-%p 6000
+%p 5000
 %n 1000
 %k 500
 %a 4000
 %o 2000
 
-BW	[ \t]
-EW	[ \t.,;!?]
-EOT	\4
+BW [ \t]
+EW [ \t.,;!?]
+EOT \4
 
 %{
 
@@ -47,55 +47,45 @@ EOT	\4
 
 \<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
-"ise"		gtf_puts("izthe");
-" man "		gtf_puts(" bitch ");
-guy		gtf_puts("babe");
-woman		gtf_puts("huthy");
-girlfriend	gtf_puts("thlut");
-boyfriend	gtf_puts("lover");
-handsome	gtf_puts("beautiful");
-nice		gtf_puts("wonderful");
-great		gtf_puts("fabuluth");
-good		gtf_puts("thplendid");
-bad		gtf_puts("nathty");
-fag		gtf_puts("queen");
-faggot		gtf_puts("piethe of wood");
-"xch"		gtf_puts("kthch");
-"xc"		gtf_puts("kth");
-"es "		gtf_puts("ezth ");
-"sh"		gtf_puts("sh");
-"Sh"		gtf_puts("Sh");
-"ous"		gtf_puts("uth");
-S+		gtf_puts("Th");
-s+		gtf_puts("th");
-Z+		gtf_puts("Zth");
-z+		gtf_puts("zth");
-ce		gtf_puts("the");
-ci		gtf_puts("thi");
-cy		gtf_puts("thy");
-Cy		gtf_puts("Thy");
-Ce		gtf_puts("The");
-Ci		gtf_puts("Thi");
-x		gtf_puts("kth");
-!+		gtf_puts(".  Mmmh, yeth!");
-[a-e]"."	gtf_printf("%s  You know, honey?", yytext);
-[f-j]"."	gtf_printf("%s  Like, ooh.", yytext);
-[k-o]"."	gtf_printf("%s  Let me tell you...", yytext);
-[p-t]"."	gtf_printf("%s  Mmmh.", yytext);
-[u-z]"."	gtf_printf("%s  Fabuluth!", yytext);
+[Ss]ch	        gtf_puts_case("sh");
+" c"		gtf_puts(" k");
+" C"		gtf_puts(" K");
+ec		gtf_puts("ek");
+ac		gtf_puts("ak");
+[Pp]h		gtf_puts_case("f");
+cc		gtf_puts("c");
+ee		gtf_puts("e");
+ff		gtf_puts("f");
+ll		gtf_puts("l");
+mm		gtf_puts("m");
+nn		gtf_puts("n");
+pp		gtf_puts("p");
+rr		gtf_puts("r");
+ss		gtf_puts("s");
+tt		gtf_puts("t");
+[Tt]h		gtf_puts_case("z");
+w		gtf_puts("v");
+ou		gtf_puts("u");
+"de "		gtf_puts("d ");
+"le "		gtf_puts("l ");
+"me "		gtf_puts("m ");
+"ne "		gtf_puts("n ");
+"re "		gtf_puts("r ");
+"ve "		gtf_puts("v ");
+[Cc]		gtf_puts_case("s");
+[Pp]ie		gtf_puts_case("mozer's pie");
+[Ss]teak        gtf_puts_case("shnitzel");
+[Gg]overnor	gtf_puts_case("govenator");
 
-{EOT}			/* ignore trailing EOT character */
+{EOT}		/* ignore trailing EOT character */
 .		gtf_echo();
-\n		gtf_echo();
+\n		gtf_puts("\n");
 
 %%
 
-/*
- */
-
 #ifdef LIBRARY_MODE
 
-int gtf_filter_pansy(const char *input, char *buf, size_t bufsz)
+int gtf_filter_austro(const char *input, char *buf, size_t bufsz)
   {
   gtf_databuf_t buffer;
   YY_BUFFER_STATE _yybuf;
@@ -109,9 +99,9 @@ int gtf_filter_pansy(const char *input, char *buf, size_t bufsz)
   return(buffer.overflow);
   }
 
-int __gtf_filter_pansy(const char *input, char *buf, size_t bufsz)
+int __gtf_filter_austro(const char *input, char *buf, size_t bufsz)
 {
-  return(gtf_filter_pansy(input, buf, bufsz));
+  return(gtf_filter_austro(input, buf, bufsz));
 }
 
 #else /* LIBRARY_MODE */
@@ -119,6 +109,7 @@ int __gtf_filter_pansy(const char *input, char *buf, size_t bufsz)
 int main(int argc, char **argv)
   {
   gtf_parse_args();
+  gtf_random_seed();
 
   yylex(NULL);
 

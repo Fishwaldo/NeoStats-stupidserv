@@ -41,12 +41,12 @@ DIST_COMMON = $(am__configure_deps) $(dist_doc_DATA) $(noinst_HEADERS) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/modconfig.h.in $(top_srcdir)/autotools/rules.mk \
 	$(top_srcdir)/configure AUTHORS COPYING ChangeLog NEWS \
-	autotools/compile autotools/config.guess autotools/config.sub \
-	autotools/depcomp autotools/install-sh autotools/ltmain.sh \
-	autotools/missing autotools/mkinstalldirs autotools/ylwrap \
-	b1ff.c brooklyn.c chef.c cockney.c drawl.c fudd.c funetak.c \
-	install-sh jethro.c jive.c kraut.c pansy.c postmodern.c \
-	redneck.c valspeak.c warez.c
+	austro.c autotools/compile autotools/config.guess \
+	autotools/config.sub autotools/depcomp autotools/install-sh \
+	autotools/ltmain.sh autotools/missing autotools/mkinstalldirs \
+	autotools/ylwrap b1ff.c brooklyn.c chef.c cockney.c drawl.c \
+	dubya.c fudd.c funetak.c install-sh jethro.c jive.c kraut.c \
+	pansy.c pirate.c postmodern.c redneck.c valspeak.c warez.c
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/autotools/acinclude.m4 \
@@ -73,7 +73,7 @@ stupidserv_la_LIBADD =
 am_stupidserv_la_OBJECTS = ss.lo s_help.lo b1ff.lo chef.lo common.lo \
 	fudd.lo jethro.lo kraut.lo postmodern.lo talkfilters.lo \
 	warez.lo brooklyn.lo cockney.lo drawl.lo funetak.lo jive.lo \
-	pansy.lo redneck.lo valspeak.lo
+	pansy.lo redneck.lo valspeak.lo austro.lo dubya.lo pirate.lo
 stupidserv_la_OBJECTS = $(am_stupidserv_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/autotools/depcomp
@@ -213,10 +213,11 @@ ACLOCAL_AMFLAGS = -I autotools
 AM_MAKEFLAGS = -s
 pkglib_LTLIBRARIES = stupidserv.la
 stupidserv_la_SOURCES = ss.c s_help.c flex/b1ff.l flex/chef.l common.c flex/fudd.l flex/jethro.l flex/kraut.l flex/postmodern.l talkfilters.c \
-			  flex/warez.l flex/brooklyn.l flex/cockney.l flex/drawl.l flex/funetak.l flex/jive.l flex/pansy.l flex/redneck.l flex/valspeak.l
+			  flex/warez.l flex/brooklyn.l flex/cockney.l flex/drawl.l flex/funetak.l flex/jive.l flex/pansy.l flex/redneck.l flex/valspeak.l \
+			  flex/austro.l flex/dubya.l flex/pirate.l
 
 noinst_HEADERS = common.h ss.h talkfilters.h
-stupidserv_la_LDFLAGS = -module -avoid-version
+stupidserv_la_LDFLAGS = -module -avoid-version -noundefined
 EXTRA_DIST = autotools/ccdv.c autotools/shtool RELNOTES
 dist_doc_DATA = README.StupidServ
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -304,18 +305,21 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/austro.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/b1ff.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/brooklyn.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chef.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cockney.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drawl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dubya.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fudd.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/funetak.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jethro.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/kraut.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pansy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pirate.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/postmodern.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/redneck.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/s_help.Plo@am__quote@
@@ -371,6 +375,15 @@ redneck.c: flex/redneck.l
 
 valspeak.c: flex/valspeak.l
 	$(SHELL) $(YLWRAP) `test -f 'flex/valspeak.l' || echo '$(srcdir)/'`flex/valspeak.l $(LEX_OUTPUT_ROOT).c valspeak.c -- $(LEX) $(LFLAGS) $(AM_LFLAGS)
+
+austro.c: flex/austro.l
+	$(SHELL) $(YLWRAP) `test -f 'flex/austro.l' || echo '$(srcdir)/'`flex/austro.l $(LEX_OUTPUT_ROOT).c austro.c -- $(LEX) $(LFLAGS) $(AM_LFLAGS)
+
+dubya.c: flex/dubya.l
+	$(SHELL) $(YLWRAP) `test -f 'flex/dubya.l' || echo '$(srcdir)/'`flex/dubya.l $(LEX_OUTPUT_ROOT).c dubya.c -- $(LEX) $(LFLAGS) $(AM_LFLAGS)
+
+pirate.c: flex/pirate.l
+	$(SHELL) $(YLWRAP) `test -f 'flex/pirate.l' || echo '$(srcdir)/'`flex/pirate.l $(LEX_OUTPUT_ROOT).c pirate.c -- $(LEX) $(LFLAGS) $(AM_LFLAGS)
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -578,17 +591,20 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-rm -f austro.c
 	-rm -f b1ff.c
 	-rm -f brooklyn.c
 	-rm -f chef.c
 	-rm -f cockney.c
 	-rm -f drawl.c
+	-rm -f dubya.c
 	-rm -f fudd.c
 	-rm -f funetak.c
 	-rm -f jethro.c
 	-rm -f jive.c
 	-rm -f kraut.c
 	-rm -f pansy.c
+	-rm -f pirate.c
 	-rm -f postmodern.c
 	-rm -f redneck.c
 	-rm -f valspeak.c

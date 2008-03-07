@@ -31,6 +31,7 @@
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
@@ -46,6 +47,8 @@ EOT	\4
 %%
 
 <NIW,INITIAL>{
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 American/{NW}		gtf_puts_case("Amerkin");
 California		gtf_puts_case("Caleyfornyuh"); BEGIN(INW);
@@ -460,6 +463,11 @@ int gtf_filter_drawl(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_drawl(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_drawl(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 

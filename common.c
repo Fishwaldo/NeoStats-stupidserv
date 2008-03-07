@@ -18,22 +18,60 @@
    Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdarg.h>
-#ifndef WIN32
 #include <unistd.h>
-#endif
 #include <stdio.h>
+#include <time.h>
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
 
+#include "getopt.h"
 #include "common.h"
 
 /*
  */
 
+static const struct option __gtf_options[] = { { "help", 0, NULL, 0  },
+                                               { "version", 0, NULL, 0 },
+                                               { NULL, 0, NULL, 0 } };
 
 /*
  */
+
+void gtf_parse_args_basic(int argc, char **argv, const char *help,
+                          const char *version)
+  {
+  int c, option_index;
+  
+  while((c = getopt_long(argc, argv, "", __gtf_options, &option_index)) != EOF)
+    {
+    switch(c)
+      {
+      case 0:
+        if(option_index == HELP_OPTION)
+          fprintf(stderr, help, *argv);
+        else if(option_index == VERSION_OPTION)
+          {
+          fputs(version, stderr);
+          fputc('\n', stderr);
+          }
+        exit(EXIT_SUCCESS);
+        break;
+        
+      default:
+        fprintf(stderr, help, *argv);
+        exit(EXIT_FAILURE);
+        break;
+      }
+    }
+  }
 
 /*
  */
@@ -71,6 +109,8 @@ int gtf_strbuf_vprintf(gtf_databuf_t *buf, const char *fmt, ...)
     buf->pos += l;
     *(buf->pos) = 0;
     }
+
+  return(l);
   }
 
 /*

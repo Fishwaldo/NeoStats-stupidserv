@@ -10593,6 +10593,12 @@ echo "${ECHO_T}Disabled" >&6; }
 fi
 
 
+
+cat >>confdefs.h <<\_ACEOF
+#define YY_NO_UNPUT 1
+_ACEOF
+
+
 CFLAGS="$CFLAGS -DBUILDINGMOD"
 
 

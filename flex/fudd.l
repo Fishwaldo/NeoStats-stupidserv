@@ -21,6 +21,7 @@
 %option prefix="fudd_yy"
 %option outfile="lex.yy.c"
 %option noyywrap
+%option nounput
 
 %e 2000
 %p 5000
@@ -36,12 +37,15 @@ EOT	\4
 %{
 
 #include "common.h"
+#include "talkfilters.h"
 
 #define YY_DECL int yylex(gtf_databuf_t *buf)
 
 %}
 
 %%
+
+\<(\/)?[A-Za-z][^\>]*\>      gtf_echo(); // don't damage HTML tags
 
 "r"         gtf_printf("w");
 "l"         gtf_printf("w");
@@ -78,6 +82,11 @@ int gtf_filter_fudd(const char *input, char *buf, size_t bufsz)
 
   return(buffer.overflow);
   }
+
+int __gtf_filter_fudd(const char *input, char *buf, size_t bufsz)
+{
+  return(gtf_filter_fudd(input, buf, bufsz));
+}
 
 #else /* LIBRARY_MODE */
 
