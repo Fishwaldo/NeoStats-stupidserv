@@ -37,51 +37,8 @@
 #include <string.h>
 #endif
 
-#ifdef HAVE_GETOPT_H
-#include "getopt.h"
-#endif
 #include "common.h"
 
-/*
- */
-
-#ifndef WIN32
-static const struct option __gtf_options[] = { { "help", 0, NULL, 0  },
-                                               { "version", 0, NULL, 0 },
-                                               { NULL, 0, NULL, 0 } };
-
-/*
- */
-
-void gtf_parse_args_basic(int argc, char **argv, const char *help,
-                          const char *version)
-  {
-  int c, option_index;
-  
-  while((c = getopt_long(argc, argv, "", __gtf_options, &option_index)) != EOF)
-    {
-    switch(c)
-      {
-      case 0:
-        if(option_index == HELP_OPTION)
-          fprintf(stderr, help, *argv);
-        else if(option_index == VERSION_OPTION)
-          {
-          fputs(version, stderr);
-          fputc('\n', stderr);
-          }
-        exit(EXIT_SUCCESS);
-        break;
-        
-      default:
-        fprintf(stderr, help, *argv);
-        exit(EXIT_FAILURE);
-        break;
-      }
-    }
-  }
-
-#endif
 /*
  */
 
