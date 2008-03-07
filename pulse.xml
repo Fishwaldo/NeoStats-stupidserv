@@ -34,7 +34,7 @@
         </post-processor>
         <resource name="Win32" required="true" version="1"/>
         <command name="Build-Core">
-            <executable name="MSBuild core" exe="${MSBuildPath}\MSBuild.exe" args="secureserv.sln /p:Configuration=Release">
+            <executable name="MSBuild core" exe="${MSBuildPath}\MSBuild.exe" args="stupidserv.sln /p:Configuration=Release">
                 <environment name="VCBUILD_DEFAULT_OPTIONS" value="/u"/>
                 <process processor="${checkbuild.pp}"/>
             </executable>
@@ -56,7 +56,7 @@
         </command>
         <command name="MakeDist">
             <executable name="MakeSnap" exe="${base.dir}\\win32\\buildwin32snap.bat" args="${build.revision}"/>
-            <artifact name="StupidServ Setup File" file="${base.dir}\\tools\\StupidServ-Setup-*.exe"/>
+            <artifact name="StupidServ Setup File" file="${base.dir}\\win32\\StupidServ-Setup-*.exe"/>
         </command>
     </recipe>
 </project>
