@@ -21,23 +21,31 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+#ifdef WIN32
+#include "modconfigwin32.h"
+#endif
 
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdarg.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <stdio.h>
 #include <time.h>
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
 
+#ifdef HAVE_GETOPT_H
 #include "getopt.h"
+#endif
 #include "common.h"
 
 /*
  */
 
+#ifndef WIN32
 static const struct option __gtf_options[] = { { "help", 0, NULL, 0  },
                                                { "version", 0, NULL, 0 },
                                                { NULL, 0, NULL, 0 } };
@@ -73,6 +81,7 @@ void gtf_parse_args_basic(int argc, char **argv, const char *help,
     }
   }
 
+#endif
 /*
  */
 

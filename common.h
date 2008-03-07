@@ -30,8 +30,11 @@
 #define strcasecmp stricmp
 #endif
 
+#ifndef WIN32
 #include "modconfig.h"
-
+#else
+#include "modconfigwin32.h"
+#endif
 typedef struct
   {
   char *buf;
